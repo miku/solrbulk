@@ -30,6 +30,7 @@ func main() {
 	numWorkers := flag.Int("w", runtime.NumCPU(), "number of workers to use")
 	verbose := flag.Bool("verbose", false, "output basic progress")
 	gzipped := flag.Bool("z", false, "unzip gz'd file on the fly")
+	reset := flag.Bool("reset", false, "remove all docs from index")
 
 	var PrintUsage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s [OPTIONS] JSON\n", os.Args[0])
@@ -52,6 +53,29 @@ func main() {
 		os.Exit(0)
 	}
 
+	options := solrbulk.Options{
+		Host:       *host,
+		Port:       *port,
+		BatchSize:  *batchSize,
+		CommitSize: *commitSize,
+		Verbose:    *verbose,
+	}
+
+	if *reset {
+		urls := []string{
+			fmt.Sprintf("http://%s:%d/solr/update?stream.body=<delete><query>*:*</query></delete>", options.Host, options.Port),
+			fmt.Sprintf("http://%s:%d/solr/update?stream.body=<commit/>", options.Host, options.Port),
+		}
+		for _, url := range urls {
+			resp, err := http.Get(url)
+			if err != nil {
+				log.Fatal(err)
+			}
+			log.Printf("%s %s", resp.Status, url)
+		}
+		os.Exit(0)
+	}
+
 	if flag.NArg() < 1 {
 		PrintUsage()
 		os.Exit(1)
@@ -64,14 +88,6 @@ func main() {
 	defer file.Close()
 
 	runtime.GOMAXPROCS(*numWorkers)
-
-	options := solrbulk.Options{
-		Host:       *host,
-		Port:       *port,
-		BatchSize:  *batchSize,
-		CommitSize: *commitSize,
-		Verbose:    *verbose,
-	}
 
 	queue := make(chan string)
 	var wg sync.WaitGroup
