@@ -13,12 +13,13 @@ Usage
 -----
 
     $ solrbulk
-    Usage: ./solrbulk [OPTIONS] JSON
+    Usage of ./solrbulk:
       -commit=10000: commit after this many docs
       -cpuprofile="": write cpu profile to file
       -host="localhost": elasticsearch host
       -memprofile="": write heap profile to file
       -port=8983: SOLR port
+      -reset=false: remove all docs from index
       -size=1000: bulk batch size
       -v=false: prints current program version
       -verbose=false: output basic progress
