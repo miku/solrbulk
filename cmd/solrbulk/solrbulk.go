@@ -97,9 +97,10 @@ func main() {
 		go solrbulk.Worker(fmt.Sprintf("worker-%d", i), options, queue, &wg)
 	}
 
+	commitUrl := fmt.Sprintf("http://%s:%d/solr/update?commit=true", *host, *port)
 	// final commit request
 	defer func() {
-		resp, err := http.Get(fmt.Sprintf("http://%s:%d/solr/update?commit=true", *host, *port))
+		resp, err := http.Get(commitUrl)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -131,7 +132,7 @@ func main() {
 		counter += 1
 
 		if counter%options.CommitSize == 0 {
-			resp, err := http.Get(fmt.Sprintf("http://%s:%d/solr/update?commit=true", options.Host, options.Port))
+			resp, err := http.Get(commitUrl)
 			if err != nil {
 				log.Fatal(err)
 			}
