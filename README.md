@@ -8,7 +8,7 @@ Motivation:
 > Sometimes you need to index a bunch of documents really, really fast.
   Even with Solr 4.0 and soft commits, if you send one document at a time
   you will be limited by the network. The solution is two-fold: batching
-  and multi-threading. (http://lucidworks.com/blog/high-throughput-indexing-in-solr/)
+  and multi-threading. http://lucidworks.com/blog/high-throughput-indexing-in-solr/
 
 solrbulk expects as input a file with [line-delimited JSON](http://en.wikipedia.org/wiki/Line_Delimited_JSON). Each line
 represents a single document. solrbulk takes care of reformatting the documents
