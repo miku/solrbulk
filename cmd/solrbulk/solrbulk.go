@@ -33,7 +33,7 @@ func main() {
 	reset := flag.Bool("reset", false, "remove all docs from index")
 
 	var PrintUsage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: %s [OPTIONS] JSON\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage: %s [OPTIONS] FILE\n", os.Args[0])
 		flag.PrintDefaults()
 	}
 
