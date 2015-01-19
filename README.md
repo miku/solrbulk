@@ -10,8 +10,8 @@ Motivation:
   you will be limited by the network. The solution is two-fold: batching
   and multi-threading. (http://lucidworks.com/blog/high-throughput-indexing-in-solr/)
 
-solrbulk expects as input a file with **line-delimited JSON** (ldj). Each line
-represents a single record. solrbulk takes care of reformatting the documents
+solrbulk expects as input a file with [line-delimited JSON](http://en.wikipedia.org/wiki/Line_Delimited_JSON). Each line
+represents a single document. solrbulk takes care of reformatting the documents
 into the bulk JSON format, that [SOLR understands](https://wiki.apache.org/solr/UpdateJSON).
 
 solrbulk will send documents in batches and in parallel. The number of documents
