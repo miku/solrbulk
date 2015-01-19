@@ -104,7 +104,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Printf("commit: %s\n", resp.Status)
+		log.Printf("final commit: %s\n", resp.Status)
 	}()
 
 	reader := bufio.NewReader(file)
