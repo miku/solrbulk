@@ -98,7 +98,7 @@ func main() {
 	}
 
 	commitUrl := fmt.Sprintf("http://%s:%d/solr/update?commit=true", *host, *port)
-	// final commit request
+
 	defer func() {
 		resp, err := http.Get(commitUrl)
 		if err != nil {
