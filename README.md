@@ -21,7 +21,7 @@ Usage
 -----
 
     $ solrbulk
-    Usage: ./solrbulk [OPTIONS] FILE
+    Usage: solrbulk [OPTIONS] FILE
       -commit=5000000: commit after this many docs
       -cpuprofile="": write cpu profile to file
       -host="localhost": elasticsearch host
@@ -33,6 +33,17 @@ Usage
       -verbose=false: output basic progress
       -w=4: number of workers to use
       -z=false: unzip gz'd file on the fly
+
+Example
+-------
+
+    $ cat file.ldj
+    {"id": "1", "state": "Alaska"}
+    {"id": "2", "state": "California"}
+    {"id": "3", "state": "Oregon"}
+    ...
+
+    $ solrbulk -verbose -host 192.168.1.222 -port 8085 file.ldj
 
 Some performance observations
 -----------------------------
