@@ -32,6 +32,9 @@ cover:
 solrbulk:
 	go build cmd/solrbulk/solrbulk.go
 
+solrbulk-tune:
+	go build cmd/solrbulk-tune/solrbulk-tune.go
+
 # ==== packaging
 
 deb: $(TARGETS)
