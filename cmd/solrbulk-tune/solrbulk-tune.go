@@ -74,7 +74,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err := ff.Close()
+	err = ff.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
