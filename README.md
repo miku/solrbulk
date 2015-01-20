@@ -58,12 +58,12 @@ Tuning
     Usage of solrbulk-tune:
       -header=false: output header row
       -host="localhost": SOLR host
-      -limit=10000: number of docs in sample file
       -path="/usr/sbin/solrbulk": path to solrbulk
       -port=8983: SOLR port
       -retry=25: retry count for index cleanup
       -v=false: prints current program version
       -verbose=false: output basic progress
+
 
 ----
 
