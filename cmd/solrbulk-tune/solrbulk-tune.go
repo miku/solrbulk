@@ -23,6 +23,7 @@ func main() {
 	path := flag.String("path", defaultPath, "path to solrbulk")
 	header := flag.Bool("header", false, "output header row")
 	limit := flag.Int("limit", 10000, "number of docs in sample file")
+	maxRetry := flag.Int("retry", 25, "retry count for index cleanup")
 
 	flag.Parse()
 
@@ -58,13 +59,26 @@ func main() {
 				if commit > *limit {
 					continue
 				}
-				cmd := exec.Command(*path, "-host", *host, "-port", strconv.Itoa(*port), "-verbose", "-reset")
-				if *verbose {
-					log.Println(strings.Join(cmd.Args, " "))
-				}
-				err := cmd.Run()
-				if err != nil {
-					log.Fatal(err)
+				retry := 0
+				var cmd *exec.Cmd
+				for {
+					cmd = exec.Command(*path, "-host", *host, "-port", strconv.Itoa(*port), "-verbose", "-reset")
+					if *verbose {
+						log.Println(strings.Join(cmd.Args, " "))
+					}
+					err := cmd.Run()
+					if err == nil {
+						break
+					} else {
+						if retry == *maxRetry {
+							log.Fatal(err)
+						} else {
+							log.Println(err)
+						}
+					}
+					retry++
+					time.Sleep(5 * time.Second)
+					log.Printf("retry [%d]...", retry)
 				}
 
 				start := time.Now()
@@ -72,10 +86,12 @@ func main() {
 				if *verbose {
 					log.Println(strings.Join(cmd.Args, " "))
 				}
-				err = cmd.Run()
+
+				err := cmd.Run()
 				if err != nil {
 					log.Println(err)
-					fmt.Printf("%d\t%d\t%d\tFAILED\n", w, size, commit)
+					elapsed := time.Since(start)
+					fmt.Printf("%d\t%d\t%d\tFAILED AFTER %0.3f\n", w, size, commit, elapsed.Seconds())
 					continue
 				}
 
