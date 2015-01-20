@@ -21,7 +21,7 @@ Usage
     Usage: solrbulk [OPTIONS] FILE
       -commit=5000000: commit after this many docs
       -cpuprofile="": write cpu profile to file
-      -host="localhost": elasticsearch host
+      -host="localhost": SOLR host
       -memprofile="": write heap profile to file
       -port=8983: SOLR port
       -reset=false: remove all docs from index
@@ -30,6 +30,7 @@ Usage
       -verbose=false: output basic progress
       -w=4: number of workers to use
       -z=false: unzip gz'd file on the fly
+
 
 Example
 -------
@@ -49,6 +50,20 @@ Some performance observations
 * Disable `autoCommit`, `autoSoftCommit` and the transaction log in `solrconfig.xml`.
 * Use some high number for `-commit`. solrbulk will issue a final commit request at the end of the processing anyway.
 * For some use cases, the bulk indexing approach is about twice as fast as a standard request to `/solr/update`.
+
+Tuning
+------
+
+    $ solrbulk-tune -h
+    Usage of solrbulk-tune:
+      -header=false: output header row
+      -host="localhost": SOLR host
+      -limit=10000: number of docs in sample file
+      -path="/usr/sbin/solrbulk": path to solrbulk
+      -port=8983: SOLR port
+      -retry=25: retry count for index cleanup
+      -v=false: prints current program version
+      -verbose=false: output basic progress
 
 ----
 
