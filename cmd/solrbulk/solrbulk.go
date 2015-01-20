@@ -23,7 +23,7 @@ func main() {
 	version := flag.Bool("v", false, "prints current program version")
 	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
 	memprofile := flag.String("memprofile", "", "write heap profile to file")
-	host := flag.String("host", "localhost", "elasticsearch host")
+	host := flag.String("host", "localhost", "SOLR host")
 	port := flag.Int("port", 8983, "SOLR port")
 	batchSize := flag.Int("size", 10000, "bulk batch size")
 	commitSize := flag.Int("commit", 5000000, "commit after this many docs")
