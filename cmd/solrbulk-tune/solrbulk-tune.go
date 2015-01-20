@@ -56,7 +56,7 @@ func main() {
 	}
 
 	if *path == "" {
-		log.Fatal("solrbulk required")
+		log.Fatal("solrbulk not in path, specify explicitly via -path")
 	}
 
 	if flag.NArg() < 1 {
