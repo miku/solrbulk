@@ -44,6 +44,7 @@ rm -rf %{_topdir}/BUILD/%{name}
 %files
 %defattr(-,root,root)
 /usr/local/sbin/solrbulk
+/usr/local/sbin/solrbulk-tune
 
 
 %changelog

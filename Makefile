@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-TARGETS = solrbulk
+TARGETS = solrbulk solrbulk-tune
 
 # http://docs.travis-ci.com/user/languages/go/#Default-Test-Script
 test:
