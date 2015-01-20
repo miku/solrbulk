@@ -31,7 +31,6 @@ Usage
       -w=4: number of workers to use
       -z=false: unzip gz'd file on the fly
 
-
 Example
 -------
 
