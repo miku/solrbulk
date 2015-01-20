@@ -27,6 +27,7 @@ fixtures/*
 
 /debian/solrbulk/usr
 /solrbulk
+/solrbulk-tune
 *.rpm
 *.deb
 
