@@ -49,6 +49,10 @@ rm -rf %{_topdir}/BUILD/%{name}
 
 %changelog
 * Tue Jan 20 2015 Martin Czygan
+- 0.1.3 release
+- added reset retry to solrbulk-tune
+
+* Tue Jan 20 2015 Martin Czygan
 - 0.1.2 release
 - added solrbulk-tune, an experimental parameter optimizing script
 
