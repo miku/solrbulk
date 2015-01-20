@@ -64,10 +64,9 @@ Tuning
       -v=false: prints current program version
       -verbose=false: output basic progress
 
-
 ----
 
 Hit [SOLR-6626](https://issues.apache.org/jira/browse/SOLR-6626),
-seems to be [fixed](https://svn.apache.org/viewvc?view=revision&revision=1646389) in 5.0.
+seems to be [fixed](https://svn.apache.org/viewvc?view=revision&revision=1646389) in trunk/5.0.
 
 > NPE in FieldMutatingUpdateProcessor when indexing a doc with null field value
