@@ -1,8 +1,6 @@
 solrbulk
 ========
 
-This software is functional, but still work-in-progress. Use with care.
-
 Motivation:
 
 > Sometimes you need to index a bunch of documents really, really fast.
