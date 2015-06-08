@@ -12,6 +12,13 @@ solrbulk expects as input a file with [line-delimited JSON](http://en.wikipedia.
 
 solrbulk will send documents in batches and in parallel. The number of documents per batch can be set via `-size`, the number of workers with `-w`.
 
+Installation
+------------
+
+    $ go get github.com/miku/solrbulk/cmd/...
+    
+There are also DEB and RPM packages available: https://github.com/miku/solrbulk/releases/
+
 Usage
 -----
 
