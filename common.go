@@ -31,16 +31,14 @@ func BulkIndex(docs []string, options Options) error {
 		lines = append(lines, doc)
 	}
 	body := fmt.Sprintf("[%s]\n", strings.Join(lines, ","))
-	response, err := http.Post(url, "application/json", strings.NewReader(body))
+	resp, err := http.Post(url, "application/json", strings.NewReader(body))
 	if err != nil {
 		return err
 	}
-	if response.StatusCode != 200 {
-		log.Fatal(response.Status)
+	if resp.StatusCode != 200 {
+		log.Fatal(resp.Status)
 	}
-	// > Caller should close resp.Body when done reading from it.
-	// Results in a resource leak otherwise.
-	response.Body.Close()
+	resp.Body.Close()
 	return nil
 }
 
@@ -48,17 +46,17 @@ func BulkIndex(docs []string, options Options) error {
 func Worker(id string, options Options, lines chan string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	var docs []string
-	counter := 0
+	i := 0
 	for s := range lines {
 		docs = append(docs, s)
-		counter++
-		if counter%options.BatchSize == 0 {
+		i++
+		if i%options.BatchSize == 0 {
 			err := BulkIndex(docs, options)
 			if err != nil {
 				log.Fatal(err)
 			}
 			if options.Verbose {
-				log.Printf("[%s] @%d\n", id, counter)
+				log.Printf("[%s] @%d\n", id, i)
 			}
 			docs = docs[:0]
 		}
@@ -68,6 +66,6 @@ func Worker(id string, options Options, lines chan string, wg *sync.WaitGroup) {
 		log.Fatal(err)
 	}
 	if options.Verbose {
-		log.Printf("[%s] @%d\n", id, counter)
+		log.Printf("[%s] @%d\n", id, i)
 	}
 }
