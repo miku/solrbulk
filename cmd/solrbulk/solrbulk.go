@@ -142,6 +142,14 @@ func main() {
 		}
 	}
 
+	resp, err := http.Get(commitUrl)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if options.Verbose {
+		log.Printf("final commit @%d %s\n", counter, resp.Status)
+	}
+
 	close(queue)
 	wg.Wait()
 	elapsed := time.Since(start)
