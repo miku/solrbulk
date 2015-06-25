@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-TARGETS = solrbulk solrbulk-tune
+TARGETS = solrbulk
 
 # http://docs.travis-ci.com/user/languages/go/#Default-Test-Script
 test:
@@ -31,9 +31,6 @@ cover:
 
 solrbulk:
 	go build cmd/solrbulk/solrbulk.go
-
-solrbulk-tune:
-	go build cmd/solrbulk-tune/solrbulk-tune.go
 
 # ==== packaging
 

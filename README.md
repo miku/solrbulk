@@ -16,7 +16,7 @@ Installation
 ------------
 
     $ go get github.com/miku/solrbulk/cmd/...
-    
+
 There are also DEB and RPM packages available: https://github.com/miku/solrbulk/releases/
 
 Usage
@@ -54,23 +54,3 @@ Some performance observations
 * Disable `autoCommit`, `autoSoftCommit` and the transaction log in `solrconfig.xml`.
 * Use some high number for `-commit`. solrbulk will issue a final commit request at the end of the processing anyway.
 * For some use cases, the bulk indexing approach is about twice as fast as a standard request to `/solr/update`.
-
-Tuning
-------
-
-    $ solrbulk-tune -h
-    Usage of solrbulk-tune:
-      -header=false: output header row
-      -host="localhost": SOLR host
-      -path="/usr/sbin/solrbulk": path to solrbulk
-      -port=8983: SOLR port
-      -retry=25: retry count for index cleanup
-      -v=false: prints current program version
-      -verbose=false: output basic progress
-
-----
-
-Hit [SOLR-6626](https://issues.apache.org/jira/browse/SOLR-6626),
-seems to be [fixed](https://svn.apache.org/viewvc?view=revision&revision=1646389) in trunk/5.0.
-
-> NPE in FieldMutatingUpdateProcessor when indexing a doc with null field value
