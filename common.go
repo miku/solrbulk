@@ -58,8 +58,7 @@ func Worker(id string, options Options, lines chan string, wg *sync.WaitGroup) {
 			if options.Verbose {
 				log.Printf("[%s] @%d\n", id, i)
 			}
-			// docs = docs[:0]
-			docs = nil
+			docs = docs[:0]
 		}
 	}
 	err := BulkIndex(docs, options)
