@@ -104,6 +104,10 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
+		err = resp.Body.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
 		log.Printf("final commit: %s\n", resp.Status)
 	}()
 
@@ -139,11 +143,16 @@ func main() {
 			if options.Verbose {
 				log.Printf("commit @%d %s\n", i, resp.Status)
 			}
+			err = resp.Body.Close()
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 	}
 
 	close(queue)
 	wg.Wait()
+
 	elapsed := time.Since(start)
 
 	if *memprofile != "" {
