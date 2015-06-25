@@ -116,7 +116,7 @@ func main() {
 		reader = bufio.NewReader(zreader)
 	}
 
-	counter := 0
+	i := 0
 	start := time.Now()
 
 	for {
@@ -129,15 +129,15 @@ func main() {
 		}
 		line = strings.TrimSpace(line)
 		queue <- line
-		counter += 1
+		i += 1
 
-		if counter%options.CommitSize == 0 {
+		if i%options.CommitSize == 0 {
 			resp, err := http.Get(commitUrl)
 			if err != nil {
 				log.Fatal(err)
 			}
 			if options.Verbose {
-				log.Printf("commit @%d %s\n", counter, resp.Status)
+				log.Printf("commit @%d %s\n", i, resp.Status)
 			}
 		}
 	}
@@ -156,7 +156,7 @@ func main() {
 	}
 
 	if *verbose {
-		rate := float64(counter) / elapsed.Seconds()
-		log.Printf("%d docs in %s at %0.3f docs/s with %d workers\n", counter, elapsed, rate, *numWorkers)
+		rate := float64(i) / elapsed.Seconds()
+		log.Printf("%d docs in %s at %0.3f docs/s with %d workers\n", i, elapsed, rate, *numWorkers)
 	}
 }
