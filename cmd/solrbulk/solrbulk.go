@@ -97,10 +97,10 @@ func main() {
 		go solrbulk.Worker(fmt.Sprintf("worker-%d", i), options, queue, &wg)
 	}
 
-	commitUrl := fmt.Sprintf("http://%s:%d/solr/update?commit=true", *host, *port)
+	commitURL := fmt.Sprintf("http://%s:%d/solr/update?commit=true", *host, *port)
 
 	defer func() {
-		resp, err := http.Get(commitUrl)
+		resp, err := http.Get(commitURL)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -133,10 +133,10 @@ func main() {
 		}
 		line = strings.TrimSpace(line)
 		queue <- line
-		i += 1
+		i++
 
 		if i%options.CommitSize == 0 {
-			resp, err := http.Get(commitUrl)
+			resp, err := http.Get(commitURL)
 			if err != nil {
 				log.Fatal(err)
 			}
