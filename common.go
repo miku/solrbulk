@@ -29,10 +29,10 @@ import (
 	"sync"
 )
 
-// Application Version
+// Version.
 const Version = "0.1.5.3"
 
-// Options represents bulk indexing options
+// Options holds bulk indexing options.
 type Options struct {
 	Host       string
 	Port       int
@@ -41,7 +41,7 @@ type Options struct {
 	Verbose    bool
 }
 
-// BulkIndex takes a set of documents as strings and indexes them into elasticsearch
+// BulkIndex takes a set of documents as strings and indexes them into SOLR.
 func BulkIndex(docs []string, options Options) error {
 	url := fmt.Sprintf("http://%s:%d/solr/update", options.Host, options.Port)
 	var lines []string
@@ -63,7 +63,7 @@ func BulkIndex(docs []string, options Options) error {
 	return nil
 }
 
-// Worker will batch index documents that come in on the lines channel
+// Worker will batch index documents from lines channel.
 func Worker(id string, options Options, lines chan string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	var docs []string
