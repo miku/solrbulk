@@ -46,6 +46,7 @@ func main() {
 	memprofile := flag.String("memprofile", "", "write heap profile to file")
 	host := flag.String("host", "localhost", "SOLR host")
 	port := flag.Int("port", 8983, "SOLR port")
+	collection := flag.String("collection", "", "SOLR core / collection")
 	batchSize := flag.Int("size", 1000, "bulk batch size")
 	commitSize := flag.Int("commit", 1000000, "commit after this many docs")
 	numWorkers := flag.Int("w", runtime.NumCPU(), "number of workers to use")
@@ -77,15 +78,20 @@ func main() {
 	options := solrbulk.Options{
 		Host:       *host,
 		Port:       *port,
+		Collection: *collection,
 		BatchSize:  *batchSize,
 		CommitSize: *commitSize,
 		Verbose:    *verbose,
 	}
 
 	if *reset {
+		hostpath := fmt.Sprintf("http://%s:%d/solr/update", options.Host, options.Port)
+		if *collection != "" {
+			hostpath = fmt.Sprintf("http://%s:%d/solr/%s/update", options.Host, options.Port, options.Collection)
+		}
 		urls := []string{
-			fmt.Sprintf("http://%s:%d/solr/update?stream.body=<delete><query>*:*</query></delete>", options.Host, options.Port),
-			fmt.Sprintf("http://%s:%d/solr/update?stream.body=<commit/>", options.Host, options.Port),
+			fmt.Sprintf("%s?stream.body=<delete><query>*:*</query></delete>", hostpath),
+			fmt.Sprintf("%s?stream.body=<commit/>", hostpath),
 		}
 		for _, url := range urls {
 			resp, err := http.Get(url)
@@ -118,7 +124,10 @@ func main() {
 		go solrbulk.Worker(fmt.Sprintf("worker-%d", i), options, queue, &wg)
 	}
 
-	commitURL := fmt.Sprintf("http://%s:%d/solr/update?commit=true", *host, *port)
+	commitURL := fmt.Sprintf("http://%s:%d/solr/update?commit=true", options.Host, options.Port)
+	if *collection != "" {
+		commitURL = fmt.Sprintf("http://%s:%d/solr/%s/update?commit=true", options.Host, options.Port, options.Collection)
+	}
 
 	defer func() {
 		resp, err := http.Get(commitURL)

@@ -36,6 +36,7 @@ const Version = "0.1.5.3"
 type Options struct {
 	Host       string
 	Port       int
+	Collection string
 	BatchSize  int
 	CommitSize int
 	Verbose    bool
@@ -43,7 +44,11 @@ type Options struct {
 
 // BulkIndex takes a set of documents as strings and indexes them into SOLR.
 func BulkIndex(docs []string, options Options) error {
-	url := fmt.Sprintf("http://%s:%d/solr/update", options.Host, options.Port)
+	link := fmt.Sprintf("http://%s:%d/solr/update", options.Host, options.Port)
+	if options.Collection != "" {
+		link = fmt.Sprintf("http://%s:%d/solr/%s/update", options.Host, options.Port, options.Collection)
+	}
+
 	var lines []string
 	for _, doc := range docs {
 		if len(strings.TrimSpace(doc)) == 0 {
@@ -51,8 +56,9 @@ func BulkIndex(docs []string, options Options) error {
 		}
 		lines = append(lines, doc)
 	}
+
 	body := fmt.Sprintf("[%s]\n", strings.Join(lines, ","))
-	resp, err := http.Post(url, "application/json", strings.NewReader(body))
+	resp, err := http.Post(link, "application/json", strings.NewReader(body))
 	if err != nil {
 		return err
 	}
