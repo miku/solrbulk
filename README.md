@@ -23,18 +23,29 @@ Usage
 -----
 
     $ solrbulk
-    Usage: solrbulk [OPTIONS] FILE
-      -commit=5000000: commit after this many docs
-      -cpuprofile="": write cpu profile to file
-      -host="localhost": SOLR host
-      -memprofile="": write heap profile to file
-      -port=8983: SOLR port
-      -reset=false: remove all docs from index
-      -size=10000: bulk batch size
-      -v=false: prints current program version
-      -verbose=false: output basic progress
-      -w=4: number of workers to use
-      -z=false: unzip gz'd file on the fly
+    Usage of solrbulk:
+      -collection string
+	  SOLR core / collection
+      -commit int
+	  commit after this many docs (default 1000000)
+      -cpuprofile string
+	  write cpu profile to file
+      -host string
+	  SOLR host (default "localhost")
+      -memprofile string
+	  write heap profile to file
+      -port int
+	  SOLR port (default 8983)
+      -reset
+	  remove all docs from index
+      -size int
+	  bulk batch size (default 1000)
+      -v  prints current program version
+      -verbose
+	  output basic progress
+      -w int
+	  number of workers to use (default 4)
+      -z  unzip gz'd file on the fly
 
 Example
 -------
