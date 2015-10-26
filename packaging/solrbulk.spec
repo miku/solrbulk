@@ -1,6 +1,6 @@
 Summary:    Fast parallel bulk loading utility for SOLR.
 Name:       solrbulk
-Version:    0.1.5.3
+Version:    0.1.5.4
 Release:    0
 License:    MIT
 BuildArch:  x86_64
@@ -46,6 +46,9 @@ rm -rf %{_topdir}/BUILD/%{name}
 
 
 %changelog
+* Mon Oct 26 2015 Martin Czygan
+- 0.1.5.4 release, add -collection flag
+
 * Tue Jan 20 2015 Martin Czygan
 - 0.1.4 release
 - autolimit solrbulk-tune test to number of lines in sample file
