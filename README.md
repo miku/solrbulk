@@ -65,3 +65,4 @@ Some performance observations
 * Disable `autoCommit`, `autoSoftCommit` and the transaction log in `solrconfig.xml`.
 * Use some high number for `-commit`. solrbulk will issue a final commit request at the end of the processing anyway.
 * For some use cases, the bulk indexing approach is about twice as fast as a standard request to `/solr/update`.
+* On machines with more cores, try to increase [maxIndexingThreads](https://cwiki.apache.org/confluence/display/solr/IndexConfig+in+SolrConfig).
