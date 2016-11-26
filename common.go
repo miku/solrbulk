@@ -78,7 +78,10 @@ func Worker(id string, options Options, lines chan string, wg *sync.WaitGroup) {
 		docs = append(docs, s)
 		i++
 		if i%options.BatchSize == 0 {
-			err := BulkIndex(docs, options)
+			msg := make([]string, len(docs))
+			copy(msg, docs)
+
+			err := BulkIndex(msg, options)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -88,7 +91,13 @@ func Worker(id string, options Options, lines chan string, wg *sync.WaitGroup) {
 			docs = docs[:0]
 		}
 	}
-	err := BulkIndex(docs, options)
+	if len(docs) == 0 {
+		return
+	}
+	msg := make([]string, len(docs))
+	copy(msg, docs)
+
+	err := BulkIndex(msg, options)
 	if err != nil {
 		log.Fatal(err)
 	}
