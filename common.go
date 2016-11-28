@@ -78,7 +78,9 @@ func Worker(id string, options Options, lines chan string, wg *sync.WaitGroup) {
 		i++
 		if i%options.BatchSize == 0 {
 			msg := make([]string, len(docs))
-			copy(msg, docs)
+			if n := copy(msg, docs); n != len(docs) {
+				log.Fatalf("%d docs in batch, but only %d copied", len(docs), n)
+			}
 
 			if err := BulkIndex(msg, options); err != nil {
 				log.Fatal(err)
