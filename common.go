@@ -81,14 +81,13 @@ func Worker(id string, options Options, lines chan string, wg *sync.WaitGroup) {
 			msg := make([]string, len(docs))
 			copy(msg, docs)
 
-			err := BulkIndex(msg, options)
-			if err != nil {
+			if err := BulkIndex(msg, options); err != nil {
 				log.Fatal(err)
 			}
 			if options.Verbose {
 				log.Printf("[%s] @%d\n", id, i)
 			}
-			docs = docs[:0]
+			docs = nil
 		}
 	}
 	if len(docs) == 0 {
@@ -97,8 +96,7 @@ func Worker(id string, options Options, lines chan string, wg *sync.WaitGroup) {
 	msg := make([]string, len(docs))
 	copy(msg, docs)
 
-	err := BulkIndex(msg, options)
-	if err != nil {
+	if err := BulkIndex(msg, options); err != nil {
 		log.Fatal(err)
 	}
 	if options.Verbose {

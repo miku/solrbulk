@@ -129,13 +129,13 @@ func main() {
 		commitURL = fmt.Sprintf("http://%s:%d/solr/%s/update?commit=true", options.Host, options.Port, options.Collection)
 	}
 
+	// final commit
 	defer func() {
 		resp, err := http.Get(commitURL)
 		if err != nil {
 			log.Fatal(err)
 		}
-		err = resp.Body.Close()
-		if err != nil {
+		if err := resp.Body.Close(); err != nil {
 			log.Fatal(err)
 		}
 		log.Printf("final commit: %s\n", resp.Status)
@@ -161,6 +161,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
+
 		line = strings.TrimSpace(line)
 		queue <- line
 		i++
@@ -173,8 +174,7 @@ func main() {
 			if options.Verbose {
 				log.Printf("commit @%d %s\n", i, resp.Status)
 			}
-			err = resp.Body.Close()
-			if err != nil {
+			if err := resp.Body.Close(); err != nil {
 				log.Fatal(err)
 			}
 		}
