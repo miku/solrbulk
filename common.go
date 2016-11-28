@@ -65,8 +65,7 @@ func BulkIndex(docs []string, options Options) error {
 	if resp.StatusCode != 200 {
 		log.Fatal(resp.Status)
 	}
-	resp.Body.Close()
-	return nil
+	return resp.Body.Close()
 }
 
 // Worker will batch index documents from lines channel.
