@@ -53,6 +53,7 @@ func main() {
 	verbose := flag.Bool("verbose", false, "output basic progress")
 	gzipped := flag.Bool("z", false, "unzip gz'd file on the fly")
 	reset := flag.Bool("reset", false, "remove all docs from index")
+	server := flag.String("server", "", "url to SOLR server, including host, port and path to collection")
 
 	var PrintUsage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s [OPTIONS] FILE\n", os.Args[0])
@@ -84,11 +85,23 @@ func main() {
 		Verbose:    *verbose,
 	}
 
-	if *reset {
-		hostpath := fmt.Sprintf("http://%s:%d/solr/update", options.Host, options.Port)
+	// Assemble a new server option, that behaves like the old one, if -server
+	// is not specified.
+	var srv string
+	if *server != "" {
+		srv = *server
+	} else {
 		if *collection != "" {
-			hostpath = fmt.Sprintf("http://%s:%d/solr/%s/update", options.Host, options.Port, options.Collection)
+			srv = fmt.Sprintf("http://%s:%d/solr/%s", options.Host, options.Port, options.Collection)
+		} else {
+			srv = fmt.Sprintf("http://%s:%d/solr", options.Host, options.Port)
 		}
+	}
+
+	options.Server = srv
+
+	if *reset {
+		hostpath := fmt.Sprintf("%s/update", options.Server)
 		urls := []string{
 			fmt.Sprintf("%s?stream.body=<delete><query>*:*</query></delete>", hostpath),
 			fmt.Sprintf("%s?stream.body=<commit/>", hostpath),
@@ -124,10 +137,7 @@ func main() {
 		go solrbulk.Worker(fmt.Sprintf("worker-%d", i), options, queue, &wg)
 	}
 
-	commitURL := fmt.Sprintf("http://%s:%d/solr/update?commit=true", options.Host, options.Port)
-	if *collection != "" {
-		commitURL = fmt.Sprintf("http://%s:%d/solr/%s/update?commit=true", options.Host, options.Port, options.Collection)
-	}
+	commitURL := fmt.Sprintf("%s/update?commit=true", options.Server)
 
 	// final commit
 	defer func() {

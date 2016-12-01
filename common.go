@@ -40,14 +40,12 @@ type Options struct {
 	BatchSize  int
 	CommitSize int
 	Verbose    bool
+	Server     string
 }
 
 // BulkIndex takes a set of documents as strings and indexes them into SOLR.
 func BulkIndex(docs []string, options Options) error {
-	link := fmt.Sprintf("http://%s:%d/solr/update", options.Host, options.Port)
-	if options.Collection != "" {
-		link = fmt.Sprintf("http://%s:%d/solr/%s/update", options.Host, options.Port, options.Collection)
-	}
+	link := fmt.Sprintf("%s/update", options.Server)
 
 	var lines []string
 	for _, doc := range docs {
