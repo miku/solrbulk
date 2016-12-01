@@ -38,6 +38,8 @@ Usage
           SOLR port (default 8983)
       -reset
           remove all docs from index
+      -server string
+          url to SOLR server, including host, port and path to collection
       -size int
           bulk batch size (default 1000)
       -v  prints current program version
@@ -46,6 +48,7 @@ Usage
       -w int
           number of workers to use (default 4)
       -z  unzip gz'd file on the fly
+
 
 Example
 -------
@@ -56,7 +59,7 @@ Example
     {"id": "3", "state": "Oregon"}
     ...
 
-    $ solrbulk -verbose -host 192.168.1.222 -port 8085 file.ldj
+    $ solrbulk -verbose -server 192.168.1.222:8085/collection1 file.ldj
 
 Some performance observations
 -----------------------------
