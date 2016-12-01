@@ -22,7 +22,9 @@
 package solrbulk
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"strings"
@@ -61,6 +63,11 @@ func BulkIndex(docs []string, options Options) error {
 		return err
 	}
 	if resp.StatusCode != 200 {
+		var buf bytes.Buffer
+		if _, err := io.Copy(&buf, resp.Body); err != nil {
+			return err
+		}
+		log.Printf("%s: %s", link, buf.String())
 		log.Fatal(resp.Status)
 	}
 	return resp.Body.Close()
