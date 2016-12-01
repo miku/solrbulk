@@ -59,7 +59,7 @@ Example
     {"id": "3", "state": "Oregon"}
     ...
 
-    $ solrbulk -verbose -server 192.168.1.222:8085/collection1 file.ldj
+    $ solrbulk -verbose -server https://192.168.1.222:8085/collection1 file.ldj
 
 Some performance observations
 -----------------------------
