@@ -44,8 +44,8 @@ func main() {
 	version := flag.Bool("v", false, "prints current program version")
 	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
 	memprofile := flag.String("memprofile", "", "write heap profile to file")
-	host := flag.String("host", "localhost", "SOLR host")
-	port := flag.Int("port", 8983, "SOLR port")
+	host := flag.String("host", "localhost", "SOLR host (deprecated, use -server)")
+	port := flag.Int("port", 8983, "SOLR port (deprecated, use -server)")
 	collection := flag.String("collection", "", "SOLR core / collection")
 	batchSize := flag.Int("size", 1000, "bulk batch size")
 	commitSize := flag.Int("commit", 1000000, "commit after this many docs")
@@ -77,8 +77,6 @@ func main() {
 	}
 
 	options := solrbulk.Options{
-		Host:       *host,
-		Port:       *port,
 		Collection: *collection,
 		BatchSize:  *batchSize,
 		CommitSize: *commitSize,
@@ -92,9 +90,9 @@ func main() {
 		srv = *server
 	} else {
 		if *collection != "" {
-			srv = fmt.Sprintf("http://%s:%d/solr/%s", options.Host, options.Port, options.Collection)
+			srv = fmt.Sprintf("http://%s:%d/solr/%s", *host, *port, options.Collection)
 		} else {
-			srv = fmt.Sprintf("http://%s:%d/solr", options.Host, options.Port)
+			srv = fmt.Sprintf("http://%s:%d/solr", *host, *port)
 		}
 	}
 

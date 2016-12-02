@@ -36,8 +36,6 @@ const Version = "0.2.2"
 
 // Options holds bulk indexing options.
 type Options struct {
-	Host       string
-	Port       int
 	Collection string
 	BatchSize  int
 	CommitSize int
