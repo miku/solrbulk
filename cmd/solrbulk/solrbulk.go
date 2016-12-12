@@ -55,11 +55,6 @@ func main() {
 	reset := flag.Bool("reset", false, "remove all docs from index")
 	server := flag.String("server", "", "url to SOLR server, including host, port and path to collection")
 
-	var PrintUsage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: %s [OPTIONS] FILE\n", os.Args[0])
-		flag.PrintDefaults()
-	}
-
 	flag.Parse()
 
 	if *cpuprofile != "" {
@@ -114,16 +109,16 @@ func main() {
 		os.Exit(0)
 	}
 
-	if flag.NArg() < 1 {
-		PrintUsage()
-		os.Exit(1)
-	}
+	var file io.Reader = os.Stdin
 
-	file, err := os.Open(flag.Args()[0])
-	if err != nil {
-		log.Fatalln(err)
+	if flag.NArg() > 0 {
+		f, err := os.Open(flag.Args()[0])
+		if err != nil {
+			log.Fatalln(err)
+		}
+		defer f.Close()
+		file = f
 	}
-	defer file.Close()
 
 	runtime.GOMAXPROCS(*numWorkers)
 
