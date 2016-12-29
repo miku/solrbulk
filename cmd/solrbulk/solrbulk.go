@@ -187,8 +187,6 @@ func main() {
 	close(queue)
 	wg.Wait()
 
-	elapsed := time.Since(start)
-
 	if *memprofile != "" {
 		f, err := os.Create(*memprofile)
 		if err != nil {
@@ -199,6 +197,7 @@ func main() {
 	}
 
 	if *verbose {
+		elapsed := time.Since(start)
 		rate := float64(i) / elapsed.Seconds()
 		log.Printf("%d docs in %s at %0.3f docs/s with %d workers\n", i, elapsed, rate, *numWorkers)
 	}
