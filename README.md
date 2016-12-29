@@ -31,11 +31,13 @@ Usage
       -cpuprofile string
           write cpu profile to file
       -host string
-          SOLR host (default "localhost")
+          SOLR host (deprecated, use -server) (default "localhost")
       -memprofile string
           write heap profile to file
+      -optimize
+          optimize index
       -port int
-          SOLR port (default 8983)
+          SOLR port (deprecated, use -server) (default 8983)
       -reset
           remove all docs from index
       -server string
