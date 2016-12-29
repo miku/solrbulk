@@ -32,7 +32,7 @@ import (
 )
 
 // Version.
-const Version = "0.2.2"
+const Version = "0.2.3"
 
 // Options holds bulk indexing options.
 type Options struct {
