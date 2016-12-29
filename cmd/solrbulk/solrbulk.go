@@ -54,6 +54,7 @@ func main() {
 	gzipped := flag.Bool("z", false, "unzip gz'd file on the fly")
 	reset := flag.Bool("reset", false, "remove all docs from index")
 	server := flag.String("server", "", "url to SOLR server, including host, port and path to collection")
+	optimize := flag.Bool("optimize", false, "optimize index")
 
 	flag.Parse()
 
@@ -200,5 +201,19 @@ func main() {
 	if *verbose {
 		rate := float64(i) / elapsed.Seconds()
 		log.Printf("%d docs in %s at %0.3f docs/s with %d workers\n", i, elapsed, rate, *numWorkers)
+	}
+
+	if *optimize {
+		hostpath := fmt.Sprintf("%s/update", options.Server)
+		url := fmt.Sprintf("%s?stream.body=<optimize/>", hostpath)
+		resp, err := http.Get(url)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("%s %s", resp.Status, url)
+		elapsed := time.Since(start)
+		if *verbose {
+			log.Printf("indexed and optimized in %s", elapsed)
+		}
 	}
 }
