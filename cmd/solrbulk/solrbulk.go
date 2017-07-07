@@ -92,6 +92,9 @@ func main() {
 		}
 	}
 
+	if !strings.HasPrefix(srv, "http") {
+		srv = fmt.Sprintf("http://%s", srv)
+	}
 	options.Server = srv
 
 	if *reset {
