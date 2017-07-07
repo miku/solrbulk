@@ -30,6 +30,9 @@ mkdir -p $RPM_BUILD_ROOT/usr/local/sbin
 # the argument on -m is the permissions expressed as octal. (See chmod man page for details.)
 install -m 755 solrbulk $RPM_BUILD_ROOT/usr/local/sbin
 
+mkdir -p $RPM_BUILD_ROOT/usr/local/share/man/man1
+install -m 644 solrbulk.1 $RPM_BUILD_ROOT/usr/local/share/man/man1/solrbulk.1
+
 %post
 # the post section is where you can run commands after the rpm is installed.
 # insserv /etc/init.d/my_maintenance
@@ -43,6 +46,7 @@ rm -rf %{_topdir}/BUILD/%{name}
 %files
 %defattr(-,root,root)
 /usr/local/sbin/solrbulk
+/usr/local/share/man/man1/solrbulk.1
 
 
 %changelog

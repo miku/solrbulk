@@ -66,9 +66,13 @@ OPTIONS
 EXAMPLES
 --------
 
-  `solrbulk -verbose -server 110.81.131.200:8080/solr/biblio`
+Index a file:
 
-TODO.
+  `solrbulk -verbose -server 110.81.131.200:8080/solr/biblio file.ldj`
+
+Index from compressed standard input:
+
+  `cat file.ldj.gz | solrbulk -z -server 110.81.131.200:8080/solr/biblio`
 
 BUGS
 ----

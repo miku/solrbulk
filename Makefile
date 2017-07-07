@@ -37,7 +37,10 @@ solrbulk:
 deb: $(TARGETS)
 	mkdir -p debian/solrbulk/usr/sbin
 	cp $(TARGETS) debian/solrbulk/usr/sbin
+	mkdir -p debian/solrbulk/usr/local/share/man/man1
+	cp docs/solrbulk.1 debian/solrbulk/usr/local/share/man/man1
 	cd debian && fakeroot dpkg-deb --build solrbulk .
+	mv debian/solrbulk_*.deb .
 
 REPOPATH = /usr/share/nginx/html/repo/CentOS/6/x86_64
 
@@ -49,5 +52,6 @@ rpm: $(TARGETS)
 	mkdir -p $(HOME)/rpmbuild/{BUILD,SOURCES,SPECS,RPMS}
 	cp ./packaging/solrbulk.spec $(HOME)/rpmbuild/SPECS
 	cp $(TARGETS) $(HOME)/rpmbuild/BUILD
+	cp docs/solrbulk.1 $(HOME)/rpmbuild/BUILD
 	./packaging/buildrpm.sh solrbulk
 	cp $(HOME)/rpmbuild/RPMS/x86_64/solrbulk*.rpm .

@@ -1,0 +1,73 @@
+.TH SOLRBULK 1 "NOVEMBER 2016" "Leipzig University Library" "Manuals"
+.SH NAME
+.PP
+solrbulk \- send documents to SOLR in bulk and in parallel.
+.SH SYNOPSIS
+.PP
+\fB\fCsolrbulk\fR [\fB\fC\-server\fR \fIURL\fP, \fB\fC\-size\fR \fIN\fP, \fB\fC\-w\fR \fIN\fP, \fB\fC\-commit\fR \fIN\fP, \fB\fC\-z\fR] \fIfile\fP
+.SH DESCRIPTION
+.PP
+solrbulk takes as input a newline delimited JSON file and indexes all documents
+into SOLR running on a given server address. The documents are batched and
+indexed in parallel to achieve a high indexing throughput.
+.SH OPTIONS
+.TP
+\fB\fC\-collection\fR \fIstring\fP
+Collection or core name. Deprecated, use \fB\fC\-server\fR\&.
+.TP
+\fB\fC\-commit\fR \fIN\fP
+Issue a commit every N documents
+.TP
+\fB\fC\-cpuprofile\fR \fIfilename\fP
+Write cpu profile to given filename.
+.TP
+\fB\fC\-host\fR \fIstring\fP
+SOLR hostname. Deprecated, use \fB\fC\-server\fR\&.
+.TP
+\fB\fC\-memprofile\fR \fIfilename\fP
+Write memory profile to given filename.
+.TP
+\fB\fC\-optimize\fR
+Issue an optimize after final commit.
+.TP
+\fB\fC\-port\fR \fIN\fP
+SOLR port. Deprecated, use \fB\fC\-server\fR\&.
+.TP
+\fB\fC\-reset\fR
+Remove all documents from the given index. No questions asked.
+.TP
+\fB\fC\-server\fR \fIURL\fP
+SOLR URL including host, port and core, like \[la]http://localhost:8983/solr/biblio\[ra]\&. Currently, the \fB\fCupdate\fR route is implied and fixed.
+.TP
+\fB\fC\-size\fR \fIN\fP
+Batch size.
+.TP
+\fB\fC\-v\fR
+Program version.
+.TP
+\fB\fC\-verbose\fR
+Show progress.
+.TP
+\fB\fC\-w\fR \fIN\fP
+Number of workers.
+.TP
+\fB\fC\-z\fR
+Decompress gzip input file on the fly.
+.SH EXAMPLES
+.PP
+Index a file:
+.IP
+\fB\fCsolrbulk \-verbose \-server 110.81.131.200:8080/solr/biblio file.ldj\fR
+.PP
+Index from compressed standard input:
+.IP
+\fB\fCcat file.ldj.gz | solrbulk \-z \-server 110.81.131.200:8080/solr/biblio\fR
+.SH BUGS
+.PP
+Please report bugs to \[la]https://github.com/miku/solrbulk/issues\[ra]\&.
+.SH AUTHOR
+.PP
+Martin Czygan \[la]martin.czygan@uni-leipzig.de\[ra]
+.SH SEE ALSO
+.PP
+FINC \[la]https://finc.info\[ra], AMSL \[la]http://amsl.technology/\[ra], esbulk \[la]https://github.com/miku/esbulk\[ra]
