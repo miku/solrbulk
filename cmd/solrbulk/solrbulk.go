@@ -1,3 +1,5 @@
+// solrbulk sends documents to a SOLR server.
+//
 //  Copyright 2015 by Leipzig University Library, http://ub.uni-leipzig.de
 //                 by The Finc Authors, http://finc.info
 //                 by Martin Czygan, <martin.czygan@uni-leipzig.de>

@@ -1,3 +1,5 @@
+// Package solrbulk implements bulk SOLR imports.
+//
 //  Copyright 2015 by Leipzig University Library, http://ub.uni-leipzig.de
 //                 by The Finc Authors, http://finc.info
 //                 by Martin Czygan, <martin.czygan@uni-leipzig.de>
@@ -31,7 +33,7 @@ import (
 	"sync"
 )
 
-// Version.
+// Version of application.
 const Version = "0.2.4"
 
 // Options holds bulk indexing options.
