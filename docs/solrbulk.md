@@ -1,4 +1,4 @@
-SOLRBULK 1 "NOVEMBER 2016" "Leipzig University Library" "Manuals"
+SOLRBULK 1 "JANUAR 2015" "Leipzig University Library" "Manuals"
 =================================================================
 
 NAME
