@@ -22,7 +22,7 @@ clean:
 	rm -f coverage.out
 	rm -f $(TARGETS)
 	rm -f solrbulk-*.x86_64.rpm
-	rm -f debian/solrbulk*.deb
+	rm -f solrbulk*.deb
 	rm -rf debian/solrbulk/usr
 
 cover:
