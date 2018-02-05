@@ -42,6 +42,12 @@ OPTIONS
 `-port` *N*
   SOLR port. Deprecated, use `-server`.
 
+`-purge`
+  Remove documents from index before indexing (use purge-query to selectively clean). No questions asked.
+
+`-purge-query *query*`
+  Query to use, when purging (default "*:*").
+
 `-reset`
   Remove all documents from the given index. No questions asked.
 
@@ -73,6 +79,10 @@ Index a file:
 Index from compressed standard input:
 
   `cat file.ldj.gz | solrbulk -z -server 110.81.131.200:8080/solr/biblio`
+
+Index a file, but remove all docs from the index before indexing:
+
+  `solrbulk -purge 110.81.131.200:8080/solr/biblio file.ldj`
 
 BUGS
 ----

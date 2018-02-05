@@ -1,4 +1,4 @@
-.TH SOLRBULK 1 "NOVEMBER 2016" "Leipzig University Library" "Manuals"
+.TH SOLRBULK 1 "JANUAR 2015" "Leipzig University Library" "Manuals"
 .SH NAME
 .PP
 solrbulk \- send documents to SOLR in bulk and in parallel.
@@ -33,6 +33,12 @@ Issue an optimize after final commit.
 \fB\fC\-port\fR \fIN\fP
 SOLR port. Deprecated, use \fB\fC\-server\fR\&.
 .TP
+\fB\fC\-purge\fR
+Remove documents from index before indexing (use purge\-query to selectively clean). No questions asked.
+.TP
+\fB\fC\-purge\-query *query*\fR
+Query to use, when purging (default "\fI:\fP").
+.TP
 \fB\fC\-reset\fR
 Remove all documents from the given index. No questions asked.
 .TP
@@ -62,6 +68,10 @@ Index a file:
 Index from compressed standard input:
 .IP
 \fB\fCcat file.ldj.gz | solrbulk \-z \-server 110.81.131.200:8080/solr/biblio\fR
+.PP
+Index a file, but remove all docs from the index before indexing:
+.IP
+\fB\fCsolrbulk \-purge 110.81.131.200:8080/solr/biblio file.ldj\fR
 .SH BUGS
 .PP
 Please report bugs to \[la]https://github.com/miku/solrbulk/issues\[ra]\&.
