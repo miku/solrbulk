@@ -54,9 +54,11 @@ func main() {
 	numWorkers := flag.Int("w", runtime.NumCPU(), "number of workers to use")
 	verbose := flag.Bool("verbose", false, "output basic progress")
 	gzipped := flag.Bool("z", false, "unzip gz'd file on the fly")
-	reset := flag.Bool("reset", false, "remove all docs from index")
+	reset := flag.Bool("reset", false, "remove all docs from index (deprecated, use -purge and optionally -purge-query)")
 	server := flag.String("server", "", "url to SOLR server, including host, port and path to collection")
 	optimize := flag.Bool("optimize", false, "optimize index")
+	purge := flag.Bool("purge", false, "remove documents from index before indexing (use purge-query to selectively clean)")
+	purgeQuery := flag.String("purge-query", "*:*", "query to use, when purging")
 
 	flag.Parse()
 
@@ -99,10 +101,11 @@ func main() {
 	}
 	options.Server = srv
 
-	if *reset {
+	if *reset || *purge {
 		hostpath := fmt.Sprintf("%s/update", options.Server)
+
 		urls := []string{
-			fmt.Sprintf("%s?stream.body=<delete><query>*:*</query></delete>", hostpath),
+			fmt.Sprintf("%s?stream.body=<delete><query>%s</query></delete>", hostpath, *purgeQuery),
 			fmt.Sprintf("%s?stream.body=<commit/>", hostpath),
 		}
 		for _, url := range urls {
@@ -112,7 +115,10 @@ func main() {
 			}
 			log.Printf("%s %s", resp.Status, url)
 		}
-		os.Exit(0)
+		// Compatibility.
+		if *reset {
+			os.Exit(0)
+		}
 	}
 
 	var file io.Reader = os.Stdin
