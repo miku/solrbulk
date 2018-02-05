@@ -45,7 +45,7 @@ OPTIONS
 `-purge`
   Remove documents from index before indexing (use purge-query to selectively clean). No questions asked.
 
-`-purge-query *query*`
+`-purge-query` *query*
   Query to use, when purging (default "*:*").
 
 `-reset`
