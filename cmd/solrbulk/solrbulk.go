@@ -59,6 +59,7 @@ func main() {
 	optimize := flag.Bool("optimize", false, "optimize index")
 	purge := flag.Bool("purge", false, "remove documents from index before indexing (use purge-query to selectively clean)")
 	purgeQuery := flag.String("purge-query", "*:*", "query to use, when purging")
+	purgePause := flag.Duration("purge-pause", 2*time.Second, "insert a short pause after purge")
 
 	flag.Parse()
 
@@ -119,6 +120,7 @@ func main() {
 		if *reset {
 			os.Exit(0)
 		}
+		time.Sleep(*purgePause)
 	}
 
 	var file io.Reader = os.Stdin
