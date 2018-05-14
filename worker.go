@@ -92,7 +92,7 @@ func Worker(id string, options Options, lines chan string, wg *sync.WaitGroup) {
 				log.Fatal(err)
 			}
 			if options.Verbose {
-				log.Printf("[%s] @%d\n", id, i)
+				log.Printf("[%s] @%d", id, i)
 			}
 			docs = nil
 		}
@@ -107,6 +107,6 @@ func Worker(id string, options Options, lines chan string, wg *sync.WaitGroup) {
 		log.Fatal(err)
 	}
 	if options.Verbose {
-		log.Printf("[%s] @%d\n", id, i)
+		log.Printf("[%s] @%d", id, i)
 	}
 }

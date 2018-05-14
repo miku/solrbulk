@@ -155,7 +155,7 @@ func main() {
 		if err := resp.Body.Close(); err != nil {
 			log.Fatal(err)
 		}
-		log.Printf("final commit: %s\n", resp.Status)
+		log.Printf("final commit: %s", resp.Status)
 	}()
 
 	reader := bufio.NewReader(file)
@@ -189,7 +189,7 @@ func main() {
 				log.Fatal(err)
 			}
 			if options.Verbose {
-				log.Printf("commit @%d %s\n", i, resp.Status)
+				log.Printf("commit @%d %s", i, resp.Status)
 			}
 			if err := resp.Body.Close(); err != nil {
 				log.Fatal(err)
@@ -212,7 +212,7 @@ func main() {
 	if *verbose {
 		elapsed := time.Since(start)
 		rate := float64(i) / elapsed.Seconds()
-		log.Printf("%d docs in %s at %0.3f docs/s with %d workers\n", i, elapsed, rate, *numWorkers)
+		log.Printf("%d docs in %s at %0.3f docs/s with %d workers", i, elapsed, rate, *numWorkers)
 	}
 
 	if *optimize {
