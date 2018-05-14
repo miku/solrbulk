@@ -27,10 +27,11 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"strings"
 	"sync"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // Version of application.

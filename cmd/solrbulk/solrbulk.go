@@ -29,7 +29,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"runtime"
@@ -39,6 +38,7 @@ import (
 	"time"
 
 	"github.com/miku/solrbulk"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
