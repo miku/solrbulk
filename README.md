@@ -25,35 +25,37 @@ Usage
     $ solrbulk
     Usage of solrbulk:
       -collection string
-            SOLR core / collection
+        	SOLR core / collection
       -commit int
-            commit after this many docs (default 1000000)
+        	commit after this many docs (default 1000000)
       -cpuprofile string
-            write cpu profile to file
+        	write cpu profile to file
       -host string
-            SOLR host (deprecated, use -server) (default "localhost")
+        	SOLR host (deprecated, use -server) (default "localhost")
       -memprofile string
-            write heap profile to file
+        	write heap profile to file
       -optimize
-            optimize index
+        	optimize index
       -port int
-            SOLR port (deprecated, use -server) (default 8983)
+        	SOLR port (deprecated, use -server) (default 8983)
       -purge
-            remove documents from index before indexing (use purge-query to selectively clean)
+        	remove documents from index before indexing (use purge-query to selectively clean)
+      -purge-pause duration
+        	insert a short pause after purge (default 2s)
       -purge-query string
-            query to use, when purging (default "*:*")
+        	query to use, when purging (default "*:*")
       -reset
-            remove all docs from index (deprecated, use -purge and optionally -purge-query)
+        	remove all docs from index (deprecated, use -purge and optionally -purge-query)
       -server string
-            url to SOLR server, including host, port and path to collection
+        	url to SOLR server, including host, port and path to collection
       -size int
-            bulk batch size (default 1000)
-      -v    prints current program version
+        	bulk batch size (default 1000)
+      -v	prints current program version
       -verbose
-            output basic progress
+        	output basic progress
       -w int
-            number of workers to use (default 4)
-      -z    unzip gz'd file on the fly
+        	number of workers to use (default 4)
+      -z	unzip gz'd file on the fly
 
 Example
 -------
