@@ -24,20 +24,14 @@ Usage
 
     $ solrbulk
     Usage of solrbulk:
-      -collection string
-        	SOLR core / collection
       -commit int
         	commit after this many docs (default 1000000)
       -cpuprofile string
         	write cpu profile to file
-      -host string
-        	SOLR host (deprecated, use -server) (default "localhost")
       -memprofile string
         	write heap profile to file
       -optimize
         	optimize index
-      -port int
-        	SOLR port (deprecated, use -server) (default 8983)
       -purge
         	remove documents from index before indexing (use purge-query to selectively clean)
       -purge-pause duration
