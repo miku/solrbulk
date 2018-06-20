@@ -39,7 +39,6 @@ const Version = "0.2.7"
 
 // Options holds bulk indexing options.
 type Options struct {
-	Collection string
 	BatchSize  int
 	CommitSize int
 	Verbose    bool

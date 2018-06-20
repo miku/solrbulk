@@ -21,26 +21,17 @@ indexed in parallel to achieve a high indexing throughput.
 OPTIONS
 -------
 
-`-collection` *string*
-  Collection or core name. Deprecated, use `-server`.
-
 `-commit` *N*
   Issue a commit every N documents
 
 `-cpuprofile` *filename*
   Write cpu profile to given filename.
 
-`-host` *string*
-  SOLR hostname. Deprecated, use `-server`.
-
 `-memprofile` *filename*
   Write memory profile to given filename.
 
 `-optimize`
   Issue an optimize after final commit.
-
-`-port` *N*
-  SOLR port. Deprecated, use `-server`.
 
 `-purge`
   Remove documents from index before indexing (use purge-query to selectively clean). No questions asked.

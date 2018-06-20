@@ -46,9 +46,6 @@ func main() {
 	version := flag.Bool("v", false, "prints current program version")
 	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
 	memprofile := flag.String("memprofile", "", "write heap profile to file")
-	host := flag.String("host", "localhost", "SOLR host (deprecated, use -server)")
-	port := flag.Int("port", 8983, "SOLR port (deprecated, use -server)")
-	collection := flag.String("collection", "", "SOLR core / collection")
 	batchSize := flag.Int("size", 1000, "bulk batch size")
 	commitSize := flag.Int("commit", 1000000, "commit after this many docs")
 	numWorkers := flag.Int("w", runtime.NumCPU(), "number of workers to use")
@@ -78,7 +75,6 @@ func main() {
 	}
 
 	options := solrbulk.Options{
-		Collection: *collection,
 		BatchSize:  *batchSize,
 		CommitSize: *commitSize,
 		Verbose:    *verbose,
@@ -86,21 +82,10 @@ func main() {
 
 	// Assemble a new server option, that behaves like the old one, if -server
 	// is not specified.
-	var srv string
-	if *server != "" {
-		srv = *server
-	} else {
-		if *collection != "" {
-			srv = fmt.Sprintf("http://%s:%d/solr/%s", *host, *port, options.Collection)
-		} else {
-			srv = fmt.Sprintf("http://%s:%d/solr", *host, *port)
-		}
+	options.Server = *server
+	if !strings.HasPrefix(options.Server, "http") {
+		options.Server = fmt.Sprintf("http://%s", options.Server)
 	}
-
-	if !strings.HasPrefix(srv, "http") {
-		srv = fmt.Sprintf("http://%s", srv)
-	}
-	options.Server = srv
 
 	if *reset || *purge {
 		hostpath := fmt.Sprintf("%s/update", options.Server)
