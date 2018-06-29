@@ -38,8 +38,6 @@ Usage
         	insert a short pause after purge (default 2s)
       -purge-query string
         	query to use, when purging (default "*:*")
-      -reset
-        	remove all docs from index (deprecated, use -purge and optionally -purge-query)
       -server string
         	url to SOLR server, including host, port and path to collection
       -size int

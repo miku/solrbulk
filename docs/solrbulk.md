@@ -42,9 +42,6 @@ OPTIONS
 `-purge-query` *query*
   Query to use, when purging (default "\*:\*").
 
-`-reset`
-  Remove all documents from the given index. No questions asked.
-
 `-server` *URL*
   SOLR URL including host, port and core, like http://localhost:8983/solr/biblio. Currently, the `update` route is implied and fixed.
 
