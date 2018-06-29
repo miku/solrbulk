@@ -51,7 +51,6 @@ func main() {
 	numWorkers := flag.Int("w", runtime.NumCPU(), "number of workers to use")
 	verbose := flag.Bool("verbose", false, "output basic progress")
 	gzipped := flag.Bool("z", false, "unzip gz'd file on the fly")
-	reset := flag.Bool("reset", false, "remove all docs from index (deprecated, use -purge and optionally -purge-query)")
 	server := flag.String("server", "", "url to SOLR server, including host, port and path to collection")
 	optimize := flag.Bool("optimize", false, "optimize index")
 	purge := flag.Bool("purge", false, "remove documents from index before indexing (use purge-query to selectively clean)")
@@ -87,7 +86,7 @@ func main() {
 		options.Server = fmt.Sprintf("http://%s", options.Server)
 	}
 
-	if *reset || *purge {
+	if *purge {
 		hostpath := fmt.Sprintf("%s/update", options.Server)
 
 		urls := []string{
@@ -100,10 +99,6 @@ func main() {
 				log.Fatal(err)
 			}
 			log.Printf("%s %s", resp.Status, url)
-		}
-		// Compatibility.
-		if *reset {
-			os.Exit(0)
 		}
 		time.Sleep(*purgePause)
 	}
