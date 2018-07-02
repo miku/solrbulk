@@ -63,6 +63,11 @@ Index from compressed standard input:
 Index a file, but remove all docs from the index before indexing:
 .IP
 \fB\fCsolrbulk \-purge 110.81.131.200:8080/solr/biblio file.ldj\fR
+.SH LIMITATIONS
+.PP
+If more than one worker is used for indexing, the order in which documents get
+indexed does not need to equal the order in which they appear in originating
+stream. In the best case, indexing order should not matter at all.
 .SH BUGS
 .PP
 Please report bugs to \[la]https://github.com/miku/solrbulk/issues\[ra]\&.

@@ -75,6 +75,13 @@ Index a file, but remove all docs from the index before indexing:
 
   `solrbulk -purge 110.81.131.200:8080/solr/biblio file.ldj`
 
+LIMITATIONS
+-----------
+
+If more than one worker is used for indexing, the order in which documents get
+indexed does not need to equal the order in which they appear in originating
+stream. In the best case, indexing order should not matter at all.
+
 BUGS
 ----
 
