@@ -1,0 +1,29 @@
+# Maintainer: Martin Czygan <martin.czygan@uni-leipzig.de>
+
+pkgname=solrbulk
+pkgver=0.3.1
+pkgrel=1
+pkgdesc="Fast parallel bulk loading utility for SOLR."
+arch=('i686' 'x86_64')
+url="https://github.com/miku/solrbulk"
+license=('GPL')
+makedepends=('go' 'git')
+options=('!strip' '!emptydirs')
+conflicts=("${pkgname}-bin")
+replaces=("${pkgname}-bin")
+source=("${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('f56ee60fd59621d226de34297702841141831bf5aafda41a103cc58affff5a78')
+_gourl='github.com/miku/solrbulk/cmd/...'
+
+prepare() {
+  export GOPATH="${srcdir}"
+  go get -u -v -f ${_gourl}
+}
+
+package() {
+  install -Dm 775 "${srcdir}/bin/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+  install -Dm 775 "${srcdir}/src/github.com/miku/${pkgname}/docs/${pkgname}.1" "${pkgdir}/usr/share/man/man1/${pkgname}.1"
+}
+
+# vim:set ft=sh ts=2 sw=2 et:
+
