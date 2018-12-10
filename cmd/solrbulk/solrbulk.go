@@ -25,7 +25,6 @@ package main
 
 import (
 	"bufio"
-	"compress/gzip"
 	"flag"
 	"fmt"
 	"io"
@@ -37,6 +36,7 @@ import (
 	"sync"
 	"time"
 
+	gzip "github.com/klauspost/compress/gzip"
 	"github.com/miku/solrbulk"
 	log "github.com/sirupsen/logrus"
 )
@@ -79,8 +79,6 @@ func main() {
 		Verbose:    *verbose,
 	}
 
-	// Assemble a new server option, that behaves like the old one, if -server
-	// is not specified.
 	options.Server = *server
 	if !strings.HasPrefix(options.Server, "http") {
 		options.Server = fmt.Sprintf("http://%s", options.Server)
@@ -114,8 +112,6 @@ func main() {
 		file = f
 	}
 
-	runtime.GOMAXPROCS(*numWorkers)
-
 	queue := make(chan string)
 	var wg sync.WaitGroup
 
@@ -126,7 +122,7 @@ func main() {
 
 	commitURL := fmt.Sprintf("%s/update?commit=true", options.Server)
 
-	// final commit
+	// A final commit.
 	defer func() {
 		resp, err := http.Get(commitURL)
 		if err != nil {
@@ -140,7 +136,7 @@ func main() {
 
 	reader := bufio.NewReader(file)
 	if *gzipped {
-		zreader, err := gzip.NewReader(file)
+		zreader, err := gzip.NewReader(reader)
 		if err != nil {
 			log.Fatal(err)
 		}
