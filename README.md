@@ -17,7 +17,7 @@ Installation
 
     $ go get github.com/miku/solrbulk/cmd/...
 
-There are also DEB and RPM packages available: https://github.com/miku/solrbulk/releases/
+There are also DEB, RPM and arch packages available: https://github.com/miku/solrbulk/releases/
 
 Usage
 -----
