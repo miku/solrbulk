@@ -13,7 +13,7 @@ indexed in parallel to achieve a high indexing throughput.
 .SH OPTIONS
 .TP
 \fB\fC\-commit\fR \fIN\fP
-Issue a commit every N documents
+Issue a commit every N documents.
 .TP
 \fB\fC\-cpuprofile\fR \fIfilename\fP
 Write cpu profile to given filename.
@@ -68,6 +68,10 @@ Index a file, but remove all docs from the index before indexing:
 If more than one worker is used for indexing, the order in which documents get
 indexed does not need to equal the order in which they appear in originating
 stream. In the best case, indexing order should not matter at all.
+.SH PERFORMANCE
+.PP
+Real\-world performance data point: Indexing 150M 2K documents on a single
+server with 8+ cores and ample RAM can be at speeds of around 5K docs/s.
 .SH BUGS
 .PP
 Please report bugs to \[la]https://github.com/miku/solrbulk/issues\[ra]\&.
