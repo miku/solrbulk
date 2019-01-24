@@ -28,7 +28,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 	"runtime"
 	"runtime/pprof"
@@ -38,6 +37,7 @@ import (
 
 	gzip "github.com/klauspost/compress/gzip"
 	"github.com/miku/solrbulk"
+	"github.com/sethgrid/pester"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -92,7 +92,7 @@ func main() {
 			fmt.Sprintf("%s?stream.body=<commit/>", hostpath),
 		}
 		for _, url := range urls {
-			resp, err := http.Get(url)
+			resp, err := pester.Get(url)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -124,7 +124,7 @@ func main() {
 
 	// A final commit.
 	defer func() {
-		resp, err := http.Get(commitURL)
+		resp, err := pester.Get(commitURL)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -160,7 +160,7 @@ func main() {
 		i++
 
 		if i%options.CommitSize == 0 {
-			resp, err := http.Get(commitURL)
+			resp, err := pester.Get(commitURL)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -194,7 +194,7 @@ func main() {
 	if *optimize {
 		hostpath := fmt.Sprintf("%s/update", options.Server)
 		url := fmt.Sprintf("%s?stream.body=<optimize/>", hostpath)
-		resp, err := http.Get(url)
+		resp, err := pester.Get(url)
 		if err != nil {
 			log.Fatal(err)
 		}

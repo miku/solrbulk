@@ -27,10 +27,10 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"net/http"
 	"strings"
 	"sync"
 
+	"github.com/sethgrid/pester"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -58,7 +58,7 @@ func BulkIndex(docs []string, options Options) error {
 	}
 
 	body := fmt.Sprintf("[%s]\n", strings.Join(lines, ","))
-	resp, err := http.Post(link, "application/json", strings.NewReader(body))
+	resp, err := pester.Post(link, "application/json", strings.NewReader(body))
 	if err != nil {
 		return err
 	}
