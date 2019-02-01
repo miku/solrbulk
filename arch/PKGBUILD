@@ -12,7 +12,7 @@ options=('!strip' '!emptydirs')
 conflicts=("${pkgname}-bin")
 replaces=("${pkgname}-bin")
 source=("${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('7c8c04a57dd1a8cc65841098779ab7ecee46c14c5b65380abac9a73422d874b2')
+sha256sums=('ac0f9df1a3577306239fd098e81df04e01e8ef78cdd19eca5d4a813a0dda6181')
 _gourl='github.com/miku/solrbulk/cmd/...'
 
 prepare() {
