@@ -1,7 +1,7 @@
 # Maintainer: Martin Czygan <martin.czygan@uni-leipzig.de>
 
 pkgname=solrbulk
-pkgver=0.3.3
+pkgver=0.3.4
 pkgrel=0
 pkgdesc="Fast parallel bulk loading utility for SOLR."
 arch=('i686' 'x86_64')
