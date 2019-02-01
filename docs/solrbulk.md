@@ -48,6 +48,9 @@ OPTIONS
 `-size` *N*
   Batch size.
 
+`-update-request-handler-name` *name*
+  Where solr.UpdateRequestHandler is mounted on the server, https://is.gd/s0eirv (default "/update").
+
 `-v`
   Program version.
 
@@ -86,7 +89,7 @@ PERFORMANCE
 -----------
 
 Real-world performance data point: Indexing 150M 2K documents on a single
-server with 8+ cores and ample RAM can be at speeds of around 5K docs/s.
+server with 8+ cores and ample RAM can be at sustained 5K docs/s.
 
 BUGS
 ----

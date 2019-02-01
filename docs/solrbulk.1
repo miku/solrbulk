@@ -39,6 +39,9 @@ SOLR URL including host, port and core, like \[la]http://localhost:8983/solr/bib
 \fB\fC\-size\fR \fIN\fP
 Batch size.
 .TP
+\fB\fC\-update\-request\-handler\-name\fR \fIname\fP
+Where solr.UpdateRequestHandler is mounted on the server, \[la]https://is.gd/s0eirv\[ra] (default "/update").
+.TP
 \fB\fC\-v\fR
 Program version.
 .TP
@@ -71,7 +74,7 @@ stream. In the best case, indexing order should not matter at all.
 .SH PERFORMANCE
 .PP
 Real\-world performance data point: Indexing 150M 2K documents on a single
-server with 8+ cores and ample RAM can be at speeds of around 5K docs/s.
+server with 8+ cores and ample RAM can be at sustained 5K docs/s.
 .SH BUGS
 .PP
 Please report bugs to \[la]https://github.com/miku/solrbulk/issues\[ra]\&.

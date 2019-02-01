@@ -25,29 +25,31 @@ Usage
     $ solrbulk
     Usage of solrbulk:
       -commit int
-        	commit after this many docs (default 1000000)
+            commit after this many docs (default 1000000)
       -cpuprofile string
-        	write cpu profile to file
+            write cpu profile to file
       -memprofile string
-        	write heap profile to file
+            write heap profile to file
       -optimize
-        	optimize index
+            optimize index
       -purge
-        	remove documents from index before indexing (use purge-query to selectively clean)
+            remove documents from index before indexing (use purge-query to selectively clean)
       -purge-pause duration
-        	insert a short pause after purge (default 2s)
+            insert a short pause after purge (default 2s)
       -purge-query string
-        	query to use, when purging (default "*:*")
+            query to use, when purging (default "*:*")
       -server string
-        	url to SOLR server, including host, port and path to collection
+            url to SOLR server, including host, port and path to collection
       -size int
-        	bulk batch size (default 1000)
-      -v	prints current program version
+            bulk batch size (default 1000)
+      -update-request-handler-name string
+            where solr.UpdateRequestHandler is mounted on the server, https://is.gd/s0eirv (default "/update")
+      -v    prints current program version
       -verbose
-        	output basic progress
+            output basic progress
       -w int
-        	number of workers to use (default 4)
-      -z	unzip gz'd file on the fly
+            number of workers to use (default 4)
+      -z    unzip gz'd file on the fly
 
 Example
 -------
