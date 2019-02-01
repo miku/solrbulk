@@ -56,6 +56,7 @@ func main() {
 	purge := flag.Bool("purge", false, "remove documents from index before indexing (use purge-query to selectively clean)")
 	purgeQuery := flag.String("purge-query", "*:*", "query to use, when purging")
 	purgePause := flag.Duration("purge-pause", 2*time.Second, "insert a short pause after purge")
+	updateRequestHandlerName := flag.String("update-request-handler-name", "/update", "where solr.UpdateRequestHandler is mounted on the server, https://is.gd/s0eirv")
 
 	flag.Parse()
 
@@ -74,9 +75,10 @@ func main() {
 	}
 
 	options := solrbulk.Options{
-		BatchSize:  *batchSize,
-		CommitSize: *commitSize,
-		Verbose:    *verbose,
+		BatchSize:                *batchSize,
+		CommitSize:               *commitSize,
+		Verbose:                  *verbose,
+		UpdateRequestHandlerName: *updateRequestHandlerName,
 	}
 
 	options.Server = *server
@@ -85,7 +87,7 @@ func main() {
 	}
 
 	if *purge {
-		hostpath := fmt.Sprintf("%s/update", options.Server)
+		hostpath := fmt.Sprintf("%s%s", options.Server, options.UpdateRequestHandlerName)
 
 		urls := []string{
 			fmt.Sprintf("%s?stream.body=<delete><query>%s</query></delete>", hostpath, *purgeQuery),
@@ -120,7 +122,7 @@ func main() {
 		go solrbulk.Worker(fmt.Sprintf("worker-%d", i), options, queue, &wg)
 	}
 
-	commitURL := fmt.Sprintf("%s/update?commit=true", options.Server)
+	commitURL := fmt.Sprintf("%s%s?commit=true", options.Server, options.UpdateRequestHandlerName)
 
 	// A final commit.
 	defer func() {
@@ -192,7 +194,7 @@ func main() {
 	}
 
 	if *optimize {
-		hostpath := fmt.Sprintf("%s/update", options.Server)
+		hostpath := fmt.Sprintf("%s%s", options.Server, options.UpdateRequestHandlerName)
 		url := fmt.Sprintf("%s?stream.body=<optimize/>", hostpath)
 		resp, err := pester.Get(url)
 		if err != nil {

@@ -39,15 +39,16 @@ const Version = "0.3.3"
 
 // Options holds bulk indexing options.
 type Options struct {
-	BatchSize  int
-	CommitSize int
-	Verbose    bool
-	Server     string
+	BatchSize                int
+	CommitSize               int
+	Verbose                  bool
+	Server                   string
+	UpdateRequestHandlerName string
 }
 
 // BulkIndex takes a set of documents as strings and indexes them into SOLR.
 func BulkIndex(docs []string, options Options) error {
-	link := fmt.Sprintf("%s/update", options.Server)
+	link := fmt.Sprintf("%s%s", options.Server, options.UpdateRequestHandlerName)
 
 	var lines []string
 	for _, doc := range docs {
