@@ -69,7 +69,7 @@ for search. This is not yet configurable.
 
 For example, if you usually select via `https://192.168.1.222:8085/solr/biblio/select` the server parameter would be:
 
-    $ solrbulk -server https://192.168.1.222:8085/solr/biblio
+    $ solrbulk -server https://192.168.1.222:8085/solr/biblio file.ldj
 
 
 Some performance observations
