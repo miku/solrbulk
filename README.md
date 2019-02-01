@@ -60,6 +60,16 @@ Example
 
     $ solrbulk -verbose -server https://192.168.1.222:8085/collection1 file.ldj
 
+The server parameter contains host, port and path up to, but excluding the
+default [*select*
+route](https://lucene.apache.org/solr/guide/6_6/requesthandlers-and-searchcomponents-in-solrconfig.html)
+for search. This is not yet configurable.
+
+For example, if you usually select via `https://192.168.1.222:8085/solr/biblio/select` the server parameter would be:
+
+    $ solrbulk -server https://192.168.1.222:8085/solr/biblio
+
+
 Some performance observations
 -----------------------------
 
