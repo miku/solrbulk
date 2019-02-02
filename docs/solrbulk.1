@@ -1,7 +1,7 @@
 .TH SOLRBULK 1 "JANUAR 2015" "Leipzig University Library" "Manuals"
 .SH NAME
 .PP
-solrbulk \- send documents to SOLR in bulk and in parallel.
+solrbulk \- send documents to SOLR in bulk and in parallel
 .SH SYNOPSIS
 .PP
 \fB\fCsolrbulk\fR [\fB\fC\-server\fR \fIURL\fP, \fB\fC\-size\fR \fIN\fP, \fB\fC\-w\fR \fIN\fP, \fB\fC\-commit\fR \fIN\fP, \fB\fC\-z\fR] \fIfile\fP
@@ -34,7 +34,7 @@ Insert a short pause after a purge query, defaults to 2s.
 Query to use, when purging (default "*:*").
 .TP
 \fB\fC\-server\fR \fIURL\fP
-SOLR URL including host, port and core, like \[la]http://localhost:8983/solr/biblio\[ra]\&. Currently, the \fB\fCupdate\fR route is implied and fixed.
+SOLR URL including host, port and core, like \[la]http://localhost:8983/solr/biblio\[ra]\&. To change the path of the update request handler, use \fB\fC\-update\-request\-handler\-name\fR flag.
 .TP
 \fB\fC\-size\fR \fIN\fP
 Batch size.
