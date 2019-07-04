@@ -1,5 +1,4 @@
-solrbulk
-========
+# solrbulk
 
 Motivation:
 
@@ -12,15 +11,24 @@ solrbulk expects as input a file with [line-delimited JSON](https://en.wikipedia
 
 solrbulk will send documents in batches and in parallel. The number of documents per batch can be set via `-size`, the number of workers with `-w`.
 
-Installation
-------------
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+
+This project has been developed for [Project finc](https://finc.info) at [Leipzig University Library](https://ub.uni-leipzig.de).
+
+## Installation
+
+Installation via Go tools.
 
     $ go get github.com/miku/solrbulk/cmd/...
 
-There are also DEB, RPM and [arch](https://github.com/miku/solrbulk/blob/master/arch/PKGBUILD) packages available: https://github.com/miku/solrbulk/releases/
+There are also DEB, RPM and
+[arch](https://github.com/miku/solrbulk/blob/master/arch/PKGBUILD) packages
+available at
+[https://github.com/miku/solrbulk/releases/](https://github.com/miku/solrbulk/releases/).
 
-Usage
------
+## Usage
+
+Flags.
 
     $ solrbulk
     Usage of solrbulk:
@@ -51,8 +59,9 @@ Usage
             number of workers to use (default 4)
       -z    unzip gz'd file on the fly
 
-Example
--------
+## Example
+
+Given a [newline delimited JSON](http://jsonlines.org/) file:
 
     $ cat file.ldj
     {"id": "1", "state": "Alaska"}
@@ -73,8 +82,7 @@ For example, if you usually update via `https://192.168.1.222:8085/solr/biblio/u
     $ solrbulk -server https://192.168.1.222:8085/solr/biblio file.ldj
 
 
-Some performance observations
------------------------------
+## Some performance observations
 
 * Having as many workers as core is generally a good idea. However the returns seem to diminish fast with more cores.
 * Disable `autoCommit`, `autoSoftCommit` and the transaction log in `solrconfig.xml`.
@@ -82,7 +90,6 @@ Some performance observations
 * For some use cases, the bulk indexing approach is about twice as fast as a standard request to `/solr/update`.
 * On machines with more cores, try to increase [maxIndexingThreads](https://cwiki.apache.org/confluence/display/solr/IndexConfig+in+SolrConfig).
 
-Elasticsearch?
---------------
+## Elasticsearch?
 
 Try [esbulk](https://github.com/miku/esbulk).
