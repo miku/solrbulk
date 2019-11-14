@@ -81,7 +81,7 @@ stream. In the best case, indexing order should not matter at all.
 ## PERFORMANCE
 
 Real-world performance data point: Indexing 150M 2K documents on a single
-server with 8+ cores and ample RAM can be at sustained 5K docs/s.
+server with 8+ cores and ample RAM runs at sustained 5K docs/s.
 
 ## BUGS
 
