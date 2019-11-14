@@ -8,14 +8,8 @@ test:
 imports:
 	goimports -w .
 
-fmt:
-	go fmt ./...
-
-all: fmt test
+all: imports test
 	go build
-
-install:
-	go install
 
 clean:
 	go clean
@@ -29,10 +23,8 @@ cover:
 	go get -d && go test -v	-coverprofile=coverage.out
 	go tool cover -html=coverage.out
 
-solrbulk:
+solrbulk: cmd/solrbulk/solrbulk.go
 	go build cmd/solrbulk/solrbulk.go
-
-# ==== packaging
 
 deb: $(TARGETS)
 	mkdir -p debian/solrbulk/usr/sbin
@@ -41,12 +33,6 @@ deb: $(TARGETS)
 	cp docs/solrbulk.1 debian/solrbulk/usr/local/share/man/man1
 	cd debian && fakeroot dpkg-deb --build solrbulk .
 	mv debian/solrbulk_*.deb .
-
-REPOPATH = /usr/share/nginx/html/repo/CentOS/6/x86_64
-
-publish: rpm
-	cp solrbulk-*.rpm $(REPOPATH)
-	createrepo $(REPOPATH)
 
 rpm: $(TARGETS)
 	mkdir -p $(HOME)/rpmbuild/{BUILD,SOURCES,SPECS,RPMS}
