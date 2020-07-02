@@ -25,6 +25,9 @@ indexed in parallel to achieve a high indexing throughput.
 `-memprofile` *filename*
   Write memory profile to given filename.
 
+`-no-final-commit`
+  omit final commit
+
 `-optimize`
   Issue an optimize after final commit.
 
