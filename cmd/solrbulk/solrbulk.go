@@ -57,6 +57,7 @@ func main() {
 	purgeQuery := flag.String("purge-query", "*:*", "query to use, when purging")
 	purgePause := flag.Duration("purge-pause", 2*time.Second, "insert a short pause after purge")
 	updateRequestHandlerName := flag.String("update-request-handler-name", "/update", "where solr.UpdateRequestHandler is mounted on the server, https://is.gd/s0eirv")
+	noFinalCommit := flag.Bool("no-final-commit", false, "omit final commit")
 
 	flag.Parse()
 
@@ -124,17 +125,19 @@ func main() {
 
 	commitURL := fmt.Sprintf("%s%s?commit=true", options.Server, options.UpdateRequestHandlerName)
 
-	// A final commit.
-	defer func() {
-		resp, err := pester.Get(commitURL)
-		if err != nil {
-			log.Fatal(err)
-		}
-		if err := resp.Body.Close(); err != nil {
-			log.Fatal(err)
-		}
-		log.Printf("final commit: %s", resp.Status)
-	}()
+	if !*noFinalCommit {
+		// A final commit.
+		defer func() {
+			resp, err := pester.Get(commitURL)
+			if err != nil {
+				log.Fatal(err)
+			}
+			if err := resp.Body.Close(); err != nil {
+				log.Fatal(err)
+			}
+			log.Printf("final commit: %s", resp.Status)
+		}()
+	}
 
 	reader := bufio.NewReader(file)
 	if *gzipped {
@@ -161,16 +164,18 @@ func main() {
 		queue <- line
 		i++
 
-		if i%options.CommitSize == 0 {
-			resp, err := pester.Get(commitURL)
-			if err != nil {
-				log.Fatal(err)
-			}
-			if options.Verbose {
-				log.Printf("commit @%d %s", i, resp.Status)
-			}
-			if err := resp.Body.Close(); err != nil {
-				log.Fatal(err)
+		if !*noFinalCommit {
+			if i%options.CommitSize == 0 {
+				resp, err := pester.Get(commitURL)
+				if err != nil {
+					log.Fatal(err)
+				}
+				if options.Verbose {
+					log.Printf("commit @%d %s", i, resp.Status)
+				}
+				if err := resp.Body.Close(); err != nil {
+					log.Fatal(err)
+				}
 			}
 		}
 	}
