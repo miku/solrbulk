@@ -164,18 +164,16 @@ func main() {
 		queue <- line
 		i++
 
-		if !*noFinalCommit {
-			if i%options.CommitSize == 0 {
-				resp, err := pester.Get(commitURL)
-				if err != nil {
-					log.Fatal(err)
-				}
-				if options.Verbose {
-					log.Printf("commit @%d %s", i, resp.Status)
-				}
-				if err := resp.Body.Close(); err != nil {
-					log.Fatal(err)
-				}
+		if i%options.CommitSize == 0 {
+			resp, err := pester.Get(commitURL)
+			if err != nil {
+				log.Fatal(err)
+			}
+			if options.Verbose {
+				log.Printf("commit @%d %s", i, resp.Status)
+			}
+			if err := resp.Body.Close(); err != nil {
+				log.Fatal(err)
 			}
 		}
 	}
