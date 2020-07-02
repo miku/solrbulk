@@ -38,6 +38,8 @@ Flags.
             write cpu profile to file
       -memprofile string
             write heap profile to file
+      -no-final-commit
+            omit final commit (at end of file or stdin)
       -optimize
             optimize index
       -purge
