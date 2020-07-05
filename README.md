@@ -7,13 +7,21 @@ Motivation:
   you will be limited by the network. The solution is two-fold: batching
   and multi-threading. http://lucidworks.com/blog/high-throughput-indexing-in-solr/
 
-solrbulk expects as input a file with [line-delimited JSON](https://en.wikipedia.org/wiki/JSON_Streaming#Line-delimited_JSON). Each line represents a single document. solrbulk takes care of reformatting the documents into the bulk JSON format, that [SOLR understands](https://cwiki.apache.org/confluence/display/solr/Uploading+Data+with+Index+Handlers#UploadingDatawithIndexHandlers-JSONFormattedIndexUpdates).
+solrbulk expects as input a file with [line-delimited
+JSON](https://en.wikipedia.org/wiki/JSON_Streaming#Line-delimited_JSON). Each
+line represents a single document. solrbulk takes care of reformatting the
+documents into the bulk JSON format, that [SOLR
+understands](https://cwiki.apache.org/confluence/display/solr/Uploading+Data+with+Index+Handlers#UploadingDatawithIndexHandlers-JSONFormattedIndexUpdates).
 
-solrbulk will send documents in batches and in parallel. The number of documents per batch can be set via `-size`, the number of workers with `-w`.
+solrbulk will send documents in batches and in parallel. The number of
+documents per batch can be set via `-size`, the number of workers with `-w`.
 
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![Project Status: Active – The project has reached a stable, usable state and
+is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
-This project has been developed for [Project finc](https://finc.info) at [Leipzig University Library](https://ub.uni-leipzig.de).
+This project has been developed for [project finc](https://finc.info) at
+[Leipzig University Library](https://ub.uni-leipzig.de).
 
 ## Installation
 
@@ -53,7 +61,8 @@ Flags.
       -size int
             bulk batch size (default 1000)
       -update-request-handler-name string
-            where solr.UpdateRequestHandler is mounted on the server, https://is.gd/s0eirv (default "/update")
+            where solr.UpdateRequestHandler is mounted on the server,
+            https://is.gd/s0eirv (default "/update")
       -v    prints current program version
       -verbose
             output basic progress
@@ -82,7 +91,6 @@ for search (since 0.3.4, this can be adjusted via
 For example, if you usually update via `https://192.168.1.222:8085/solr/biblio/update` the server parameter would be:
 
     $ solrbulk -server https://192.168.1.222:8085/solr/biblio file.ldj
-
 
 ## Some performance observations
 
