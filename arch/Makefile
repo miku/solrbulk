@@ -1,5 +1,5 @@
 NAME = solrbulk
-VERSION = 0.3.4
+VERSION = 0.3.6
 RELEASE = 0
 
 $(NAME)-$(VERSION)-$(RELEASE)-x86_64.pkg.tar.xz: PKGBUILD
