@@ -41,26 +41,26 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+var (
+	version                  = flag.Bool("v", false, "prints current program version")
+	cpuprofile               = flag.String("cpuprofile", "", "write cpu profile to file")
+	memprofile               = flag.String("memprofile", "", "write heap profile to file")
+	batchSize                = flag.Int("size", 1000, "bulk batch size")
+	commitSize               = flag.Int("commit", 1000000, "commit after this many docs")
+	numWorkers               = flag.Int("w", runtime.NumCPU(), "number of workers to use")
+	verbose                  = flag.Bool("verbose", false, "output basic progress")
+	gzipped                  = flag.Bool("z", false, "unzip gz'd file on the fly")
+	server                   = flag.String("server", "", "url to SOLR server, including host, port and path to collection")
+	optimize                 = flag.Bool("optimize", false, "optimize index")
+	purge                    = flag.Bool("purge", false, "remove documents from index before indexing (use purge-query to selectively clean)")
+	purgeQuery               = flag.String("purge-query", "*:*", "query to use, when purging")
+	purgePause               = flag.Duration("purge-pause", 2*time.Second, "insert a short pause after purge")
+	updateRequestHandlerName = flag.String("update-request-handler-name", "/update", "where solr.UpdateRequestHandler is mounted on the server, https://is.gd/s0eirv")
+	noFinalCommit            = flag.Bool("no-final-commit", false, "omit final commit")
+)
+
 func main() {
-
-	version := flag.Bool("v", false, "prints current program version")
-	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
-	memprofile := flag.String("memprofile", "", "write heap profile to file")
-	batchSize := flag.Int("size", 1000, "bulk batch size")
-	commitSize := flag.Int("commit", 1000000, "commit after this many docs")
-	numWorkers := flag.Int("w", runtime.NumCPU(), "number of workers to use")
-	verbose := flag.Bool("verbose", false, "output basic progress")
-	gzipped := flag.Bool("z", false, "unzip gz'd file on the fly")
-	server := flag.String("server", "", "url to SOLR server, including host, port and path to collection")
-	optimize := flag.Bool("optimize", false, "optimize index")
-	purge := flag.Bool("purge", false, "remove documents from index before indexing (use purge-query to selectively clean)")
-	purgeQuery := flag.String("purge-query", "*:*", "query to use, when purging")
-	purgePause := flag.Duration("purge-pause", 2*time.Second, "insert a short pause after purge")
-	updateRequestHandlerName := flag.String("update-request-handler-name", "/update", "where solr.UpdateRequestHandler is mounted on the server, https://is.gd/s0eirv")
-	noFinalCommit := flag.Bool("no-final-commit", false, "omit final commit")
-
 	flag.Parse()
-
 	if *cpuprofile != "" {
 		f, err := os.Create(*cpuprofile)
 		if err != nil {
@@ -69,31 +69,28 @@ func main() {
 		pprof.StartCPUProfile(f)
 		defer pprof.StopCPUProfile()
 	}
-
 	if *version {
 		fmt.Println(solrbulk.Version)
 		os.Exit(0)
 	}
-
 	options := solrbulk.Options{
 		BatchSize:                *batchSize,
 		CommitSize:               *commitSize,
 		Verbose:                  *verbose,
 		UpdateRequestHandlerName: *updateRequestHandlerName,
+		Server:                   *server,
 	}
-
-	options.Server = *server
 	if !strings.HasPrefix(options.Server, "http") {
 		options.Server = fmt.Sprintf("http://%s", options.Server)
 	}
-
 	if *purge {
-		hostpath := fmt.Sprintf("%s%s", options.Server, options.UpdateRequestHandlerName)
-
-		urls := []string{
-			fmt.Sprintf("%s?stream.body=<delete><query>%s</query></delete>", hostpath, *purgeQuery),
-			fmt.Sprintf("%s?stream.body=<commit/>", hostpath),
-		}
+		var (
+			hostpath = fmt.Sprintf("%s%s", options.Server, options.UpdateRequestHandlerName)
+			urls     = []string{
+				fmt.Sprintf("%s?stream.body=<delete><query>%s</query></delete>", hostpath, *purgeQuery),
+				fmt.Sprintf("%s?stream.body=<commit/>", hostpath),
+			}
+		)
 		for _, url := range urls {
 			resp, err := pester.Get(url)
 			if err != nil {
@@ -103,30 +100,26 @@ func main() {
 		}
 		time.Sleep(*purgePause)
 	}
-
 	var file io.Reader = os.Stdin
-
 	if flag.NArg() > 0 {
-		f, err := os.Open(flag.Args()[0])
+		f, err := os.Open(flag.Arg(0))
 		if err != nil {
 			log.Fatalln(err)
 		}
 		defer f.Close()
 		file = f
 	}
-
-	queue := make(chan string)
-	var wg sync.WaitGroup
-
+	var (
+		queue     = make(chan string)
+		wg        sync.WaitGroup
+		commitURL = fmt.Sprintf("%s%s?commit=true", options.Server, options.UpdateRequestHandlerName)
+		reader    = bufio.NewReader(file)
+	)
 	for i := 0; i < *numWorkers; i++ {
 		wg.Add(1)
 		go solrbulk.Worker(fmt.Sprintf("worker-%d", i), options, queue, &wg)
 	}
-
-	commitURL := fmt.Sprintf("%s%s?commit=true", options.Server, options.UpdateRequestHandlerName)
-
 	if !*noFinalCommit {
-		// A final commit.
 		defer func() {
 			resp, err := pester.Get(commitURL)
 			if err != nil {
@@ -138,8 +131,6 @@ func main() {
 			log.Printf("final commit: %s", resp.Status)
 		}()
 	}
-
-	reader := bufio.NewReader(file)
 	if *gzipped {
 		zreader, err := gzip.NewReader(reader)
 		if err != nil {
@@ -147,10 +138,10 @@ func main() {
 		}
 		reader = bufio.NewReader(zreader)
 	}
-
-	i := 0
-	start := time.Now()
-
+	var (
+		i     = 0
+		start = time.Now()
+	)
 	for {
 		line, err := reader.ReadString('\n')
 		if err == io.EOF {
@@ -159,11 +150,9 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-
 		line = strings.TrimSpace(line)
 		queue <- line
 		i++
-
 		if i%options.CommitSize == 0 {
 			resp, err := pester.Get(commitURL)
 			if err != nil {
@@ -177,10 +166,8 @@ func main() {
 			}
 		}
 	}
-
 	close(queue)
 	wg.Wait()
-
 	if *memprofile != "" {
 		f, err := os.Create(*memprofile)
 		if err != nil {
@@ -189,13 +176,11 @@ func main() {
 		pprof.WriteHeapProfile(f)
 		f.Close()
 	}
-
 	if *verbose {
 		elapsed := time.Since(start)
 		rate := float64(i) / elapsed.Seconds()
 		log.Printf("%d docs in %s at %0.3f docs/s with %d workers", i, elapsed, rate, *numWorkers)
 	}
-
 	if *optimize {
 		hostpath := fmt.Sprintf("%s%s", options.Server, options.UpdateRequestHandlerName)
 		url := fmt.Sprintf("%s?stream.body=<optimize/>", hostpath)
