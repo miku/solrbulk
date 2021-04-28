@@ -50,7 +50,7 @@ var (
 	numWorkers               = flag.Int("w", runtime.NumCPU(), "number of workers to use")
 	verbose                  = flag.Bool("verbose", false, "output basic progress")
 	gzipped                  = flag.Bool("z", false, "unzip gz'd file on the fly")
-	server                   = flag.String("server", "", "url to SOLR server, including host, port and path to collection")
+	server                   = flag.String("server", "", "url to SOLR server, including host, port and path to collection, e.g. http://localhost:8983/solr/biblio")
 	optimize                 = flag.Bool("optimize", false, "optimize index")
 	purge                    = flag.Bool("purge", false, "remove documents from index before indexing (use purge-query to selectively clean)")
 	purgeQuery               = flag.String("purge-query", "*:*", "query to use, when purging")

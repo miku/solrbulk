@@ -47,7 +47,7 @@ Flags.
       -memprofile string
             write heap profile to file
       -no-final-commit
-            omit final commit (at end of file or stdin)
+            omit final commit
       -optimize
             optimize index
       -purge
@@ -57,7 +57,8 @@ Flags.
       -purge-query string
             query to use, when purging (default "*:*")
       -server string
-            url to SOLR server, including host, port and path to collection
+            url to SOLR server, including host, port and path to collection,
+            e.g. http://localhost:8983/solr/biblio
       -size int
             bulk batch size (default 1000)
       -update-request-handler-name string
