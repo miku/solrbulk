@@ -69,7 +69,7 @@ Index a file:
 
 Index from compressed standard input:
 
-  `cat file.ldj.gz | solrbulk -z -server 110.81.131.200:8080/solr/biblio`
+  `solrbulk -z -server 110.81.131.200:8080/solr/biblio < file.ndj.gz`
 
 Index a file, but remove all docs from the index before indexing:
 
