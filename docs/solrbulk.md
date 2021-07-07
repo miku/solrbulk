@@ -26,7 +26,7 @@ indexed in parallel to achieve a high indexing throughput.
   Write memory profile to given filename.
 
 `-no-final-commit`
-  omit final commit
+  Omit final commit.
 
 `-optimize`
   Issue an optimize after final commit.
@@ -90,9 +90,9 @@ server with 8+ cores and ample RAM runs at sustained 5K docs/s.
 
 Please report bugs to https://github.com/miku/solrbulk/issues.
 
-## AUTHOR
+## AUTHORS
 
-Martin Czygan <martin.czygan@uni-leipzig.de>
+Martin Czygan <martin.czygan@uni-leipzig.de>, [Thomas Gersch](https://github.com/titabo2k)
 
 ## SEE ALSO
 
