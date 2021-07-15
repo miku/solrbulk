@@ -1,5 +1,3 @@
-// Package solrbulk implements bulk SOLR imports.
-//
 //  Copyright 2015 by Leipzig University Library, http://ub.uni-leipzig.de
 //                 by The Finc Authors, http://finc.info
 //                 by Martin Czygan, <martin.czygan@uni-leipzig.de>
@@ -20,7 +18,8 @@
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 //
 // @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>
-//
+
+// Package solrbulk implements bulk SOLR imports.
 package solrbulk
 
 import (
