@@ -56,7 +56,6 @@ func BulkIndex(docs []string, options Options) error {
 		}
 		lines = append(lines, doc)
 	}
-
 	body := fmt.Sprintf("[%s]\n", strings.Join(lines, ","))
 	resp, err := pester.Post(link, "application/json", strings.NewReader(body))
 	if err != nil {
