@@ -21,8 +21,8 @@ is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 ![GitHub All Releases](https://img.shields.io/github/downloads/miku/solrbulk/total.svg)
 
-This project has been developed for [project finc](https://finc.info) at
-[Leipzig University Library](https://ub.uni-leipzig.de).
+This tool has been developed for [project finc](https://finc.info) at [Leipzig
+University Library](https://ub.uni-leipzig.de).
 
 ## Installation
 
