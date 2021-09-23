@@ -19,6 +19,7 @@ documents per batch can be set via `-size`, the number of workers with `-w`.
 [![Project Status: Active – The project has reached a stable, usable state and
 is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+![GitHub All Releases](https://img.shields.io/github/downloads/miku/solrbulk/total.svg)
 
 This project has been developed for [project finc](https://finc.info) at
 [Leipzig University Library](https://ub.uni-leipzig.de).
