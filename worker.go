@@ -26,8 +26,10 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/sethgrid/pester"
 	log "github.com/sirupsen/logrus"
@@ -66,6 +68,17 @@ func BulkIndex(docs []string, options Options) error {
 		if _, err := io.Copy(&buf, resp.Body); err != nil {
 			return err
 		}
+		// Write out the failed request payload to temporary file.
+		f, err := ioutil.TempFile("", fmt.Sprintf("solrbulk-%d", time.Now().Unix()))
+		if err != nil {
+			log.Printf("failed to write failed request payload to debug file: %v", err)
+		} else {
+			defer f.Close()
+			_, err := f.Write([]byte(body))
+			if err == nil {
+				log.Printf("failed payload written to: %v", f.Name())
+			}
+		}
 		log.Printf("%s: %s", link, buf.String())
 		log.Fatal(resp.Status)
 	}
@@ -81,11 +94,11 @@ func Worker(id string, options Options, lines chan string, wg *sync.WaitGroup) {
 		docs = append(docs, s)
 		i++
 		if i%options.BatchSize == 0 {
+			// TODO: we do not need a copy, BulkIndex is synchronous
 			msg := make([]string, len(docs))
 			if n := copy(msg, docs); n != len(docs) {
 				log.Fatalf("%d docs in batch, but only %d copied", len(docs), n)
 			}
-
 			if err := BulkIndex(msg, options); err != nil {
 				log.Fatal(err)
 			}
