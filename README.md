@@ -28,7 +28,7 @@ University Library](https://ub.uni-leipzig.de).
 
 Installation via Go tools.
 
-    $ go install github.com/miku/solrbulk/cmd/...@latest
+    $ go install github.com/miku/solrbulk/cmd/solrbulk@latest
 
 There are also DEB, RPM and
 [arch](https://github.com/miku/solrbulk/blob/master/arch/PKGBUILD) packages
