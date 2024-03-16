@@ -36,7 +36,7 @@ import (
 )
 
 // Version of application.
-const Version = "0.3.12"
+const Version = "0.3.13"
 
 // Options holds bulk indexing options.
 type Options struct {
