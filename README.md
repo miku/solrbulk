@@ -30,10 +30,8 @@ Installation via Go tools.
 
     $ go install github.com/miku/solrbulk/cmd/solrbulk@latest
 
-There are also DEB, RPM and
-[arch](https://github.com/miku/solrbulk/blob/master/arch/PKGBUILD) packages
-available at
-[https://github.com/miku/solrbulk/releases/](https://github.com/miku/solrbulk/releases/).
+There are also DEB and RPM packages
+available at [https://github.com/miku/solrbulk/releases/](https://github.com/miku/solrbulk/releases/).
 
 ## Usage
 
