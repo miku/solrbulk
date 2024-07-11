@@ -45,6 +45,8 @@ type Options struct {
 	Verbose                  bool
 	Server                   string
 	UpdateRequestHandlerName string
+	BasicAuth                string
+}
 }
 
 // BulkIndex takes a set of documents as strings and indexes them into SOLR.
