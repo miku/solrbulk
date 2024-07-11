@@ -62,7 +62,7 @@ var (
 	basicAuth                = flag.String("auth", "", "username:password pair for basic auth")
 )
 
-func requestGet(url string, options solrbulk.Options) (*http.Response, error) {
+func newGetRequest(url string, options solrbulk.Options) (*http.Request, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -71,12 +71,7 @@ func requestGet(url string, options solrbulk.Options) (*http.Response, error) {
 	if options.BasicAuth != "" {
 		req.Header.Add("Authorization", "Basic "+b64.StdEncoding.EncodeToString([]byte(options.BasicAuth)))
 	}
-	resp, err := pester.Do(req)
-
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	return req, nil
 }
 
 func main() {
@@ -113,7 +108,12 @@ func main() {
 			}
 		)
 		for _, url := range urls {
-			resp, err := requestGet(url, options)
+			req, err := newGetRequest(url, options)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			resp, err := pester.Do(req)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -175,7 +175,12 @@ func main() {
 		queue <- line
 		i++
 		if i%options.CommitSize == 0 {
-			resp, err := requestGet(commitURL, options)
+			req, err := newGetRequest(commitURL, options)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			resp, err := pester.Do(req)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -205,7 +210,13 @@ func main() {
 	if *optimize {
 		hostpath := fmt.Sprintf("%s%s", options.Server, options.UpdateRequestHandlerName)
 		url := fmt.Sprintf("%s?stream.body=<optimize/>", hostpath)
-		resp, err := requestGet(url, options)
+
+		req, err := newGetRequest(url, options)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		resp, err := pester.Do(req)
 		if err != nil {
 			log.Fatal(err)
 		}

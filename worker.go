@@ -50,7 +50,7 @@ type Options struct {
 	BasicAuth                string
 }
 
-func requestPost(url string, body string, options Options) (*http.Response, error) {
+func newPostRequest(url string, body string, options Options) (*http.Request, error) {
 	req, err := http.NewRequest("POST", url, strings.NewReader(body))
 	if err != nil {
 		return nil, err
@@ -60,12 +60,7 @@ func requestPost(url string, body string, options Options) (*http.Response, erro
 		req.Header.Add("Authorization", "Basic "+ b64.StdEncoding.EncodeToString([]byte(options.BasicAuth)))
 	}
 	req.Header.Set("Content-Type", "application/json")
-	resp, err := pester.Do(req)
-
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	return req, nil
 }
 
 // BulkIndex takes a set of documents as strings and indexes them into SOLR.
@@ -81,8 +76,12 @@ func BulkIndex(docs []string, options Options) error {
 	}
 	body := fmt.Sprintf("[%s]\n", strings.Join(lines, ","))
 
-	resp, err := requestPost(link, body, options)
+	req, err := newPostRequest(link, body, options)
+	if err != nil {
+		return err
+	}
 
+	resp, err := pester.Do(req)
 	if err != nil {
 		return err
 	}
