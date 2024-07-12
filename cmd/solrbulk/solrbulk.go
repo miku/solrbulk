@@ -25,9 +25,11 @@ package main
 
 import (
 	"bufio"
+	b64 "encoding/base64"
 	"flag"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"runtime"
 	"runtime/pprof"
@@ -57,7 +59,20 @@ var (
 	purgePause               = flag.Duration("purge-pause", 2*time.Second, "insert a short pause after purge")
 	updateRequestHandlerName = flag.String("update-request-handler-name", "/update", "where solr.UpdateRequestHandler is mounted on the server, https://is.gd/s0eirv")
 	noFinalCommit            = flag.Bool("no-final-commit", false, "omit final commit")
+	basicAuth                = flag.String("auth", "", "username:password pair for basic auth")
 )
+
+func newGetRequest(url string, options solrbulk.Options) (*http.Request, error) {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if options.BasicAuth != "" {
+		req.Header.Add("Authorization", "Basic "+b64.StdEncoding.EncodeToString([]byte(options.BasicAuth)))
+	}
+	return req, nil
+}
 
 func main() {
 	flag.Parse()
@@ -79,6 +94,7 @@ func main() {
 		Verbose:                  *verbose,
 		UpdateRequestHandlerName: *updateRequestHandlerName,
 		Server:                   *server,
+		BasicAuth:                *basicAuth,
 	}
 	if !strings.HasPrefix(options.Server, "http") {
 		options.Server = fmt.Sprintf("http://%s", options.Server)
@@ -92,7 +108,12 @@ func main() {
 			}
 		)
 		for _, url := range urls {
-			resp, err := pester.Get(url)
+			req, err := newGetRequest(url, options)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			resp, err := pester.Do(req)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -154,7 +175,12 @@ func main() {
 		queue <- line
 		i++
 		if i%options.CommitSize == 0 {
-			resp, err := pester.Get(commitURL)
+			req, err := newGetRequest(commitURL, options)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			resp, err := pester.Do(req)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -184,7 +210,13 @@ func main() {
 	if *optimize {
 		hostpath := fmt.Sprintf("%s%s", options.Server, options.UpdateRequestHandlerName)
 		url := fmt.Sprintf("%s?stream.body=<optimize/>", hostpath)
-		resp, err := pester.Get(url)
+
+		req, err := newGetRequest(url, options)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		resp, err := pester.Do(req)
 		if err != nil {
 			log.Fatal(err)
 		}
