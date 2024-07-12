@@ -23,8 +23,8 @@
 package solrbulk
 
 import (
-	b64 "encoding/base64"
 	"bytes"
+	b64 "encoding/base64"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -38,7 +38,7 @@ import (
 )
 
 // Version of application.
-const Version = "0.3.14"
+const Version = "0.3.15"
 
 // Options holds bulk indexing options.
 type Options struct {
@@ -56,8 +56,8 @@ func newPostRequest(url string, body string, options Options) (*http.Request, er
 		return nil, err
 	}
 
-	if options.BasicAuth  != "" {
-		req.Header.Add("Authorization", "Basic "+ b64.StdEncoding.EncodeToString([]byte(options.BasicAuth)))
+	if options.BasicAuth != "" {
+		req.Header.Add("Authorization", "Basic "+b64.StdEncoding.EncodeToString([]byte(options.BasicAuth)))
 	}
 	req.Header.Set("Content-Type", "application/json")
 	return req, nil
