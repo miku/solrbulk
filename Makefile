@@ -2,7 +2,7 @@ SHELL := /bin/bash
 TARGETS = solrbulk
 
 solrbulk: cmd/solrbulk/solrbulk.go
-	go build cmd/solrbulk/solrbulk.go
+	go build -ldflags "-w -s -linkmode=external" -o $@ $^
 
 .PHONY: all
 all: imports test
