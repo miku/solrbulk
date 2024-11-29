@@ -1,6 +1,6 @@
 Summary:    Fast parallel bulk loading utility for SOLR.
 Name:       solrbulk
-Version:    0.3.16
+Version:    0.3.17
 Release:    0
 License:    MIT
 BuildArch:  x86_64
