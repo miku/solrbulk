@@ -27,8 +27,8 @@ import (
 	b64 "encoding/base64"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -91,7 +91,7 @@ func BulkIndex(docs []string, options Options) error {
 			return err
 		}
 		// Write out the failed request payload to temporary file.
-		f, err := ioutil.TempFile("", fmt.Sprintf("solrbulk-%d", time.Now().Unix()))
+		f, err := os.CreateTemp("", fmt.Sprintf("solrbulk-%d", time.Now().Unix()))
 		if err != nil {
 			log.Printf("failed to write failed request payload to debug file: %v", err)
 		} else {
