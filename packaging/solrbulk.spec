@@ -1,6 +1,6 @@
 Summary:    Fast parallel bulk loading utility for SOLR.
 Name:       solrbulk
-Version:    0.3.19
+Version:    0.4.0
 Release:    0
 License:    MIT
 BuildArch:  x86_64
@@ -24,11 +24,11 @@ Fast parallel bulk loading utility for SOLR.
 
 %install
 # create directories where the files will be located
-mkdir -p $RPM_BUILD_ROOT/usr/local/sbin
+mkdir -p $RPM_BUILD_ROOT/usr/local/bin
 
 # put the files in to the relevant directories.
 # the argument on -m is the permissions expressed as octal. (See chmod man page for details.)
-install -m 755 solrbulk $RPM_BUILD_ROOT/usr/local/sbin
+install -m 755 solrbulk $RPM_BUILD_ROOT/usr/local/bin
 
 mkdir -p $RPM_BUILD_ROOT/usr/local/share/man/man1
 install -m 644 solrbulk.1 $RPM_BUILD_ROOT/usr/local/share/man/man1/solrbulk.1
@@ -45,7 +45,7 @@ rm -rf %{_topdir}/BUILD/%{name}
 # list files owned by the package here
 %files
 %defattr(-,root,root)
-/usr/local/sbin/solrbulk
+/usr/local/bin/solrbulk
 /usr/local/share/man/man1/solrbulk.1
 
 

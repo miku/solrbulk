@@ -37,8 +37,8 @@ cover:
 
 .PHONY: deb
 deb: $(TARGETS)
-	mkdir -p debian/solrbulk/usr/sbin
-	cp $(TARGETS) debian/solrbulk/usr/sbin
+	mkdir -p debian/solrbulk/usr/local/bin
+	cp $(TARGETS) debian/solrbulk/usr/local/bin
 	mkdir -p debian/solrbulk/usr/local/share/man/man1
 	cp docs/solrbulk.1 debian/solrbulk/usr/local/share/man/man1
 	cd debian && fakeroot dpkg-deb --build solrbulk .
