@@ -25,6 +25,7 @@ package solrbulk
 import (
 	"bytes"
 	b64 "encoding/base64"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -50,12 +51,24 @@ type Options struct {
 	BasicAuth                string
 }
 
+type SolrResponse struct {
+	ResponseHeader struct {
+		Errors []struct {
+			Type    string `json:"type"`
+			ID      string `json:"id"`
+			Message string `json:"message"`
+		} `json:"errors"`
+		MaxErrors int `json:"maxErrors"`
+		Status    int `json:"status"`
+		QTime     int `json:"QTime"`
+	} `json:"responseHeader"`
+}
+
 func newPostRequest(url string, body string, options Options) (*http.Request, error) {
 	req, err := http.NewRequest("POST", url, strings.NewReader(body))
 	if err != nil {
 		return nil, err
 	}
-
 	if options.BasicAuth != "" {
 		req.Header.Add("Authorization", "Basic "+b64.StdEncoding.EncodeToString([]byte(options.BasicAuth)))
 	}
@@ -66,7 +79,6 @@ func newPostRequest(url string, body string, options Options) (*http.Request, er
 // BulkIndex takes a set of documents as strings and indexes them into SOLR.
 func BulkIndex(docs []string, options Options) error {
 	link := fmt.Sprintf("%s%s", options.Server, options.UpdateRequestHandlerName)
-
 	var lines []string
 	for _, doc := range docs {
 		if len(strings.TrimSpace(doc)) == 0 {
@@ -75,12 +87,10 @@ func BulkIndex(docs []string, options Options) error {
 		lines = append(lines, doc)
 	}
 	body := fmt.Sprintf("[%s]\n", strings.Join(lines, ","))
-
 	req, err := newPostRequest(link, body, options)
 	if err != nil {
 		return err
 	}
-
 	resp, err := pester.Do(req)
 	if err != nil {
 		return err
@@ -102,7 +112,16 @@ func BulkIndex(docs []string, options Options) error {
 			}
 		}
 		log.Printf("%s: %s", link, buf.String())
-		log.Fatal(resp.Status)
+		return fmt.Errorf("index request returned %v", resp.Status)
+	} else {
+		// Log possible errors, e.g. when using TolerantUpdateProcessorFactory.
+		var sr SolrResponse
+		dec := json.NewDecoder(resp.Body)
+		if err := dec.Decode(&sr); err == nil {
+			for _, e := range sr.ResponseHeader.Errors {
+				log.Printf("%s [%s] %s", e.ID, e.Type, e.Message)
+			}
+		}
 	}
 	return resp.Body.Close()
 }
@@ -135,7 +154,6 @@ func Worker(id string, options Options, lines chan string, wg *sync.WaitGroup) {
 	}
 	msg := make([]string, len(docs))
 	copy(msg, docs)
-
 	if err := BulkIndex(msg, options); err != nil {
 		log.Fatal(err)
 	}
