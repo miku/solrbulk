@@ -39,6 +39,8 @@ Flags.
 
     $ solrbulk
     Usage of solrbulk:
+      -auth string
+            username:password pair for basic auth
       -commit int
             commit after this many docs (default 1000000)
       -cpuprofile string
@@ -56,19 +58,17 @@ Flags.
       -purge-query string
             query to use, when purging (default "*:*")
       -server string
-            url to SOLR server, including host, port and path to collection,
-            e.g. http://localhost:8983/solr/biblio
+            url to SOLR server, including host, port and path to collection, e.g. http://localhost:8983/solr/biblio
       -size int
             bulk batch size (default 1000)
       -update-request-handler-name string
-            where solr.UpdateRequestHandler is mounted on the server,
-            https://is.gd/s0eirv (default "/update")
-      -v    prints current program version
+            where solr.UpdateRequestHandler is mounted on the server, https://is.gd/s0eirv (default "/update")
+      -v	prints current program version
       -verbose
             output basic progress
       -w int
-            number of workers to use (default 4)
-      -z    unzip gz'd file on the fly
+            number of workers to use (default 8)
+      -z	unzip gz'd file on the fly
 
 ## Example
 

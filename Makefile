@@ -17,6 +17,9 @@ test:
 imports:
 	goimports -w .
 
+docs/solrbulk.1: docs/solrbulk.md
+	md2man-roff docs/solrbulk.md > docs/solrbulk.1
+
 .PHONY: clean
 clean:
 	go clean

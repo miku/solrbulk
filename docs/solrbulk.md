@@ -16,6 +16,9 @@ indexed in parallel to achieve a high indexing throughput.
 
 ## OPTIONS
 
+`-auth` *cred*
+  username:password pair for basic auth
+
 `-commit` *N*
   Issue a commit every N documents.
 
