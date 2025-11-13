@@ -1,8 +1,10 @@
 SHELL := /bin/bash
 TARGETS = solrbulk
+PKGNAME = solrbulk
+VERSION = 0.4.2
 
 solrbulk: cmd/solrbulk/solrbulk.go
-	go build -ldflags "-w -s -linkmode=external" -o $@ $^
+	go build -o $@ $^
 
 .PHONY: all
 all: imports test
@@ -37,18 +39,20 @@ cover:
 
 .PHONY: deb
 deb: $(TARGETS)
-	mkdir -p debian/solrbulk/usr/local/bin
-	cp $(TARGETS) debian/solrbulk/usr/local/bin
-	mkdir -p debian/solrbulk/usr/local/share/man/man1
-	cp docs/solrbulk.1 debian/solrbulk/usr/local/share/man/man1
-	cd debian && fakeroot dpkg-deb --build solrbulk .
-	mv debian/solrbulk_*.deb .
+	mkdir -p debian/$(PKGNAME)/usr/local/bin
+	cp $(TARGETS) debian/$(PKGNAME)/usr/local/bin
+	mkdir -p debian/$(PKGNAME)/usr/local/share/man/man1
+	cp docs/$(PKGNAME).1 debian/$(PKGNAME)/usr/local/share/man/man1
+	cd debian && fakeroot dpkg-deb -Zzstd --build $(PKGNAME) .
+	mv debian/$(PKGNAME)_*.deb .
 
 .PHONY: rpm
 rpm: $(TARGETS)
 	mkdir -p $(HOME)/rpmbuild/{BUILD,SOURCES,SPECS,RPMS}
-	cp ./packaging/solrbulk.spec $(HOME)/rpmbuild/SPECS
-	cp $(TARGETS) $(HOME)/rpmbuild/BUILD
-	cp docs/solrbulk.1 $(HOME)/rpmbuild/BUILD
-	./packaging/buildrpm.sh solrbulk
-	cp $(HOME)/rpmbuild/RPMS/x86_64/solrbulk*.rpm .
+	mkdir -p $(HOME)/rpmbuild/SOURCES/$(PKGNAME)
+	cp ./packaging/$(PKGNAME).spec $(HOME)/rpmbuild/SPECS
+	cp $(TARGETS) $(HOME)/rpmbuild/SOURCES/$(PKGNAME)
+	cp docs/$(PKGNAME).1 $(HOME)/rpmbuild/SOURCES/$(PKGNAME)
+	./packaging/buildrpm.sh $(PKGNAME)
+	cp $(HOME)/rpmbuild/RPMS/x86_64/$(PKGNAME)-$(VERSION)*.rpm .
+

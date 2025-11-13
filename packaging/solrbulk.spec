@@ -8,6 +8,9 @@ BuildRoot:  %{_tmppath}/%{name}-build
 Group:      System/Base
 Vendor:     Leipzig University Library <http://ub.uni-leipzig.de>
 URL:        https://github.com/miku/solrbulk
+Source:     %{name}.tar.gz
+
+%define _binary_payload w1.zstdio
 
 %description
 
