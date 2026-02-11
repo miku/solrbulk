@@ -74,6 +74,18 @@ func newGetRequest(url string, options solrbulk.Options) (*http.Request, error) 
 	return req, nil
 }
 
+func newXMLPostRequest(url string, body string, options solrbulk.Options) (*http.Request, error) {
+	req, err := http.NewRequest("POST", url, strings.NewReader(body))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/xml")
+	if options.BasicAuth != "" {
+		req.Header.Add("Authorization", "Basic "+b64.StdEncoding.EncodeToString([]byte(options.BasicAuth)))
+	}
+	return req, nil
+}
+
 func main() {
 	flag.Parse()
 	if *cpuprofile != "" {
@@ -104,22 +116,21 @@ func main() {
 	if *purge {
 		var (
 			hostpath = fmt.Sprintf("%s%s", options.Server, options.UpdateRequestHandlerName)
-			urls     = []string{
-				fmt.Sprintf("%s?stream.body=<delete><query>%s</query></delete>", hostpath, *purgeQuery),
-				fmt.Sprintf("%s?stream.body=<commit/>", hostpath),
+			bodies   = []string{
+				fmt.Sprintf("<delete><query>%s</query></delete>", *purgeQuery),
+				"<commit/>",
 			}
 		)
-		for _, url := range urls {
-			req, err := newGetRequest(url, options)
+		for _, body := range bodies {
+			req, err := newXMLPostRequest(hostpath, body, options)
 			if err != nil {
 				log.Fatal(err)
 			}
-
 			resp, err := pester.Do(req)
 			if err != nil {
 				log.Fatal(err)
 			}
-			log.Printf("%s %s", resp.Status, url)
+			log.Printf("%s %s %s", resp.Status, hostpath, body)
 		}
 		time.Sleep(*purgePause)
 	}
@@ -213,18 +224,15 @@ func main() {
 	}
 	if *optimize {
 		hostpath := fmt.Sprintf("%s%s", options.Server, options.UpdateRequestHandlerName)
-		url := fmt.Sprintf("%s?stream.body=<optimize/>", hostpath)
-
-		req, err := newGetRequest(url, options)
+		req, err := newXMLPostRequest(hostpath, "<optimize/>", options)
 		if err != nil {
 			log.Fatal(err)
 		}
-
 		resp, err := pester.Do(req)
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Printf("%s %s", resp.Status, url)
+		log.Printf("%s %s", resp.Status, hostpath)
 		elapsed := time.Since(start)
 		if *verbose {
 			log.Printf("indexed and optimized in %s", elapsed)
