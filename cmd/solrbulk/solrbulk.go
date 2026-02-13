@@ -57,6 +57,7 @@ var (
 	purge                    = flag.Bool("purge", false, "remove documents from index before indexing (use purge-query to selectively clean)")
 	purgeQuery               = flag.String("purge-query", "*:*", "query to use, when purging")
 	purgePause               = flag.Duration("purge-pause", 2*time.Second, "insert a short pause after purge")
+	purgeOnly                = flag.Bool("purge-only", false, "only purge and exit")
 	updateRequestHandlerName = flag.String("update-request-handler-name", "/update", "where solr.UpdateRequestHandler is mounted on the server, https://is.gd/s0eirv")
 	noFinalCommit            = flag.Bool("no-final-commit", false, "omit final commit")
 	basicAuth                = flag.String("auth", "", "username:password pair for basic auth")
@@ -131,6 +132,9 @@ func main() {
 				log.Fatal(err)
 			}
 			log.Printf("%s %s %s", resp.Status, hostpath, body)
+		}
+		if *purgeOnly {
+			os.Exit(0)
 		}
 		time.Sleep(*purgePause)
 	}

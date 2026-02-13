@@ -53,6 +53,8 @@ Flags.
             optimize index
       -purge
             remove documents from index before indexing (use purge-query to selectively clean)
+      -purge-only
+            only purge and exit
       -purge-pause duration
             insert a short pause after purge (default 2s)
       -purge-query string
@@ -63,12 +65,13 @@ Flags.
             bulk batch size (default 1000)
       -update-request-handler-name string
             where solr.UpdateRequestHandler is mounted on the server, https://is.gd/s0eirv (default "/update")
-      -v	prints current program version
+      -v    prints current program version
       -verbose
             output basic progress
       -w int
             number of workers to use (default 8)
-      -z	unzip gz'd file on the fly
+      -z    unzip gz'd file on the fly
+
 
 ## Example
 
