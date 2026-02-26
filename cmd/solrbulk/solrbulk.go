@@ -114,6 +114,9 @@ func main() {
 	if !strings.HasPrefix(options.Server, "http") {
 		options.Server = fmt.Sprintf("http://%s", options.Server)
 	}
+	if *purgeOnly {
+		*purge = true
+	}
 	if *purge {
 		var (
 			hostpath = fmt.Sprintf("%s%s", options.Server, options.UpdateRequestHandlerName)
