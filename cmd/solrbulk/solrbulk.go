@@ -162,7 +162,12 @@ func main() {
 	}
 	if !*noFinalCommit {
 		defer func() {
-			resp, err := pester.Get(commitURL)
+			req, err := newGetRequest(commitURL, options)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			resp, err := pester.Do(req)
 			if err != nil {
 				log.Fatal(err)
 			}
