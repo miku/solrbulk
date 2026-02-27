@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 TARGETS = solrbulk
 PKGNAME = solrbulk
-VERSION = 0.4.6
+VERSION = 0.4.7
 
 solrbulk: cmd/solrbulk/solrbulk.go
 	go build -o $@ $^
