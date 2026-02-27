@@ -5,7 +5,10 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"sync/atomic"
 	"testing"
+
+	"github.com/sethgrid/pester"
 )
 
 // TestBulkIndex tests the BulkIndex function
@@ -132,10 +135,63 @@ func TestBulkIndex(t *testing.T) {
 			defer server.Close()
 
 			tc.options.Server = server.URL
-			err := BulkIndex(tc.docs, tc.options)
+			client := pester.New()
+			client.MaxRetries = 0
+			err := BulkIndex(tc.docs, tc.options, client)
 			if (err != nil) != tc.expectError {
 				t.Errorf("BulkIndex() error = %v, expectError %v", err, tc.expectError)
 			}
 		})
+	}
+}
+
+func TestBulkIndexRetryTransientFailure(t *testing.T) {
+	var attempts int32
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		n := atomic.AddInt32(&attempts, 1)
+		if n < 3 {
+			// Close connection without response to simulate connection refused.
+			hj, ok := w.(http.Hijacker)
+			if !ok {
+				t.Fatal("server does not support hijacking")
+			}
+			conn, _, _ := hj.Hijack()
+			conn.Close()
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"responseHeader":{"status":0,"QTime":1}}`))
+	}))
+	defer server.Close()
+	options := Options{
+		BatchSize:                100,
+		CommitSize:               100,
+		UpdateRequestHandlerName: "/update",
+		Server:                   server.URL,
+	}
+	client := pester.New()
+	client.MaxRetries = 5
+	client.Backoff = pester.LinearBackoff
+	err := BulkIndex([]string{`{"id":"1"}`}, options, client)
+	if err != nil {
+		t.Fatalf("expected success after retries, got: %v", err)
+	}
+	got := atomic.LoadInt32(&attempts)
+	if got < 3 {
+		t.Errorf("expected at least 3 attempts (2 failures + 1 success), got %d", got)
+	}
+}
+
+func TestNewClient(t *testing.T) {
+	c := NewClient(Options{MaxRetries: 7, RetryWaitSeconds: 3})
+	if c.MaxRetries != 7 {
+		t.Errorf("expected MaxRetries=7, got %d", c.MaxRetries)
+	}
+}
+
+func TestNewClientDefaults(t *testing.T) {
+	c := NewClient(Options{})
+	if c.MaxRetries != 10 {
+		t.Errorf("expected default MaxRetries=10, got %d", c.MaxRetries)
 	}
 }

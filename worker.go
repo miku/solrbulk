@@ -49,6 +49,30 @@ type Options struct {
 	Server                   string
 	UpdateRequestHandlerName string
 	BasicAuth                string
+	MaxRetries               int
+	RetryWaitSeconds         int
+}
+
+// NewClient returns a configured pester HTTP client with retry and backoff
+// settings derived from the given options. If MaxRetries is 0, it defaults to
+// 10; if RetryWaitSeconds is 0, it defaults to 5.
+func NewClient(options Options) *pester.Client {
+	c := pester.New()
+	c.MaxRetries = options.MaxRetries
+	if c.MaxRetries == 0 {
+		c.MaxRetries = 10
+	}
+	wait := options.RetryWaitSeconds
+	if wait == 0 {
+		wait = 5
+	}
+	c.Backoff = func(retry int) time.Duration {
+		return time.Duration(wait) * time.Second * time.Duration(1<<uint(retry))
+	}
+	c.LogHook = func(e pester.ErrEntry) {
+		log.Printf("retry %d/%d: %s %v", e.Retry, c.MaxRetries, e.Verb, e.Err)
+	}
+	return c
 }
 
 type SolrResponse struct {
@@ -77,7 +101,7 @@ func newPostRequest(url string, body string, options Options) (*http.Request, er
 }
 
 // BulkIndex takes a set of documents as strings and indexes them into SOLR.
-func BulkIndex(docs []string, options Options) error {
+func BulkIndex(docs []string, options Options, client *pester.Client) error {
 	link := fmt.Sprintf("%s%s", options.Server, options.UpdateRequestHandlerName)
 	var lines []string
 	for _, doc := range docs {
@@ -91,7 +115,7 @@ func BulkIndex(docs []string, options Options) error {
 	if err != nil {
 		return err
 	}
-	resp, err := pester.Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}
@@ -127,7 +151,7 @@ func BulkIndex(docs []string, options Options) error {
 }
 
 // Worker will batch index documents from lines channel.
-func Worker(id string, options Options, lines chan string, wg *sync.WaitGroup) {
+func Worker(id string, options Options, lines chan string, wg *sync.WaitGroup, client *pester.Client) {
 	defer wg.Done()
 	var docs []string
 	i := 0
@@ -140,7 +164,7 @@ func Worker(id string, options Options, lines chan string, wg *sync.WaitGroup) {
 			if n := copy(msg, docs); n != len(docs) {
 				log.Fatalf("%d docs in batch, but only %d copied", len(docs), n)
 			}
-			if err := BulkIndex(msg, options); err != nil {
+			if err := BulkIndex(msg, options, client); err != nil {
 				log.Fatal(err)
 			}
 			if options.Verbose {
@@ -154,7 +178,7 @@ func Worker(id string, options Options, lines chan string, wg *sync.WaitGroup) {
 	}
 	msg := make([]string, len(docs))
 	copy(msg, docs)
-	if err := BulkIndex(msg, options); err != nil {
+	if err := BulkIndex(msg, options, client); err != nil {
 		log.Fatal(err)
 	}
 	if options.Verbose {

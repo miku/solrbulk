@@ -39,7 +39,6 @@ import (
 
 	gzip "github.com/klauspost/compress/gzip"
 	"github.com/miku/solrbulk"
-	"github.com/sethgrid/pester"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -61,6 +60,8 @@ var (
 	updateRequestHandlerName = flag.String("update-request-handler-name", "/update", "where solr.UpdateRequestHandler is mounted on the server, https://is.gd/s0eirv")
 	noFinalCommit            = flag.Bool("no-final-commit", false, "omit final commit")
 	basicAuth                = flag.String("auth", "", "username:password pair for basic auth")
+	maxRetries               = flag.Int("max-retries", 10, "max number of retries on transient errors (e.g. connection refused)")
+	retryWaitSeconds         = flag.Int("retry-wait", 5, "base wait time in seconds between retries (doubles each retry)")
 )
 
 func newGetRequest(url string, options solrbulk.Options) (*http.Request, error) {
@@ -110,7 +111,10 @@ func main() {
 		UpdateRequestHandlerName: *updateRequestHandlerName,
 		Server:                   *server,
 		BasicAuth:                *basicAuth,
+		MaxRetries:               *maxRetries,
+		RetryWaitSeconds:         *retryWaitSeconds,
 	}
+	client := solrbulk.NewClient(options)
 	if !strings.HasPrefix(options.Server, "http") {
 		options.Server = fmt.Sprintf("http://%s", options.Server)
 	}
@@ -130,7 +134,7 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
-			resp, err := pester.Do(req)
+			resp, err := client.Do(req)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -158,7 +162,7 @@ func main() {
 	)
 	for i := 0; i < *numWorkers; i++ {
 		wg.Add(1)
-		go solrbulk.Worker(fmt.Sprintf("worker-%d", i), options, queue, &wg)
+		go solrbulk.Worker(fmt.Sprintf("worker-%d", i), options, queue, &wg, client)
 	}
 	if !*noFinalCommit {
 		defer func() {
@@ -167,7 +171,7 @@ func main() {
 				log.Fatal(err)
 			}
 
-			resp, err := pester.Do(req)
+			resp, err := client.Do(req)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -205,7 +209,7 @@ func main() {
 				log.Fatal(err)
 			}
 
-			resp, err := pester.Do(req)
+			resp, err := client.Do(req)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -240,7 +244,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		resp, err := pester.Do(req)
+		resp, err := client.Do(req)
 		if err != nil {
 			log.Fatal(err)
 		}
