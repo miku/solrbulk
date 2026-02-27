@@ -45,6 +45,8 @@ Flags.
             commit after this many docs (default 1000000)
       -cpuprofile string
             write cpu profile to file
+      -max-retries int
+            max number of retries on transient errors (e.g. connection refused) (default 10)
       -memprofile string
             write heap profile to file
       -no-final-commit
@@ -59,6 +61,8 @@ Flags.
             insert a short pause after purge (default 2s)
       -purge-query string
             query to use, when purging (default "*:*")
+      -retry-wait int
+            base wait time in seconds between retries (doubles each retry) (default 5)
       -server string
             url to SOLR server, including host, port and path to collection, e.g. http://localhost:8983/solr/biblio
       -size int
@@ -71,6 +75,7 @@ Flags.
       -w int
             number of workers to use (default 8)
       -z    unzip gz'd file on the fly
+
 
 
 ## Example
