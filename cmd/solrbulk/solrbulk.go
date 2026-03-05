@@ -35,7 +35,6 @@ import (
 	"runtime/pprof"
 	"strings"
 	"sync"
-	"sync/atomic"
 	"time"
 
 	gzip "github.com/klauspost/compress/gzip"
@@ -191,33 +190,18 @@ func main() {
 		reader = bufio.NewReader(zreader)
 	}
 	var (
-		i     = 0
-		count atomic.Int64
-		start = time.Now()
+		i      = 0
+		frames = []rune("⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏")
+		start  = time.Now()
 	)
 	if *showProgress && *verbose {
 		log.Fatal("-P and -verbose are mutually exclusive")
 	}
 	if *showProgress {
-		done := make(chan struct{})
 		defer func() {
-			close(done)
-			fmt.Fprintf(os.Stderr, "\r\033[2;37m  processed %d docs\033[0m\n", count.Load())
-		}()
-		go func() {
-			frames := []rune("⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏")
-			ticker := time.NewTicker(100 * time.Millisecond)
-			defer ticker.Stop()
-			frame := 0
-			for {
-				select {
-				case <-done:
-					return
-				case <-ticker.C:
-					fmt.Fprintf(os.Stderr, "\r\033[2;37m%c processed %d docs\033[0m", frames[frame%len(frames)], count.Load())
-					frame++
-				}
-			}
+			elapsed := time.Since(start).Truncate(time.Second)
+			rate := float64(i) / time.Since(start).Seconds()
+			fmt.Fprintf(os.Stderr, "\r\033[2;37m  processed %d docs in %v (%0.0f docs/s)\033[0m\n", i, elapsed, rate)
 		}()
 	}
 	for {
@@ -231,7 +215,11 @@ func main() {
 		line = strings.TrimSpace(line)
 		queue <- line
 		i++
-		count.Store(int64(i))
+		if *showProgress && i%1000 == 0 {
+			elapsed := time.Since(start).Truncate(time.Second)
+			rate := float64(i) / time.Since(start).Seconds()
+			fmt.Fprintf(os.Stderr, "\r\033[2;37m%c %v elapsed, processed %d docs (%0.0f docs/s)\033[0m", frames[(i/1000)%len(frames)], elapsed, i, rate)
+		}
 		if i%options.CommitSize == 0 {
 			req, err := newGetRequest(commitURL, options)
 			if err != nil {
