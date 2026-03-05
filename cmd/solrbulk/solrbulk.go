@@ -202,17 +202,20 @@ func main() {
 		done := make(chan struct{})
 		defer func() {
 			close(done)
-			fmt.Fprintf(os.Stderr, "\r\033[2;37mprocessed %d lines\033[0m\n", count.Load())
+			fmt.Fprintf(os.Stderr, "\r\033[2;37m  processed %d docs\033[0m\n", count.Load())
 		}()
 		go func() {
-			ticker := time.NewTicker(200 * time.Millisecond)
+			frames := []rune("⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏")
+			ticker := time.NewTicker(100 * time.Millisecond)
 			defer ticker.Stop()
+			frame := 0
 			for {
 				select {
 				case <-done:
 					return
 				case <-ticker.C:
-					fmt.Fprintf(os.Stderr, "\r\033[2;37mprocessed %d lines\033[0m", count.Load())
+					fmt.Fprintf(os.Stderr, "\r\033[2;37m%c processed %d docs\033[0m", frames[frame%len(frames)], count.Load())
+					frame++
 				}
 			}
 		}()
