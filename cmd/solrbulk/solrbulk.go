@@ -35,6 +35,7 @@ import (
 	"runtime/pprof"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	gzip "github.com/klauspost/compress/gzip"
@@ -62,6 +63,7 @@ var (
 	basicAuth                = flag.String("auth", "", "username:password pair for basic auth")
 	maxRetries               = flag.Int("max-retries", 10, "max number of retries on transient errors (e.g. connection refused)")
 	retryWaitSeconds         = flag.Int("retry-wait", 5, "base wait time in seconds between retries (doubles each retry)")
+	showProgress             = flag.Bool("P", false, "show progress indicator on stderr")
 )
 
 func newGetRequest(url string, options solrbulk.Options) (*http.Request, error) {
@@ -190,8 +192,28 @@ func main() {
 	}
 	var (
 		i     = 0
+		count atomic.Int64
 		start = time.Now()
 	)
+	if *showProgress {
+		done := make(chan struct{})
+		defer func() {
+			close(done)
+			fmt.Fprintf(os.Stderr, "\r\033[2;37mprocessed %d lines\033[0m\n", count.Load())
+		}()
+		go func() {
+			ticker := time.NewTicker(200 * time.Millisecond)
+			defer ticker.Stop()
+			for {
+				select {
+				case <-done:
+					return
+				case <-ticker.C:
+					fmt.Fprintf(os.Stderr, "\r\033[2;37mprocessed %d lines\033[0m", count.Load())
+				}
+			}
+		}()
+	}
 	for {
 		line, err := reader.ReadString('\n')
 		if err == io.EOF {
@@ -203,6 +225,7 @@ func main() {
 		line = strings.TrimSpace(line)
 		queue <- line
 		i++
+		count.Store(int64(i))
 		if i%options.CommitSize == 0 {
 			req, err := newGetRequest(commitURL, options)
 			if err != nil {
