@@ -201,7 +201,7 @@ func main() {
 		defer func() {
 			elapsed := time.Since(start).Truncate(time.Second)
 			rate := float64(i) / time.Since(start).Seconds()
-			fmt.Fprintf(os.Stderr, "\r\033[2;37m  processed %d docs in %v (%0.0f docs/s)\033[0m\n", i, elapsed, rate)
+			fmt.Fprintf(os.Stderr, "\r\033[2K\033[2;37m  processed %d docs in %v (%0.0f docs/s)\033[0m\n", i, elapsed, rate)
 		}()
 	}
 	for {
@@ -218,7 +218,7 @@ func main() {
 		if *showProgress && i%1000 == 0 {
 			elapsed := time.Since(start).Truncate(time.Second)
 			rate := float64(i) / time.Since(start).Seconds()
-			fmt.Fprintf(os.Stderr, "\r\033[2;37m%c %v elapsed, processed %d docs (%0.0f docs/s)\033[0m", frames[(i/1000)%len(frames)], elapsed, i, rate)
+			fmt.Fprintf(os.Stderr, "\r\033[2K\033[2;37m%c %v elapsed, processed %d docs (%0.0f docs/s)\033[0m", frames[(i/1000)%len(frames)], elapsed, i, rate)
 		}
 		if i%options.CommitSize == 0 {
 			req, err := newGetRequest(commitURL, options)
