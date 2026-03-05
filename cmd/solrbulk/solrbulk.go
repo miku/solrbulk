@@ -195,6 +195,9 @@ func main() {
 		count atomic.Int64
 		start = time.Now()
 	)
+	if *showProgress && *verbose {
+		log.Fatal("-P and -verbose are mutually exclusive")
+	}
 	if *showProgress {
 		done := make(chan struct{})
 		defer func() {
