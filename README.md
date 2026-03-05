@@ -24,6 +24,8 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 This tool has been developed for [project finc](https://finc.info) at [Leipzig
 University Library](https://ub.uni-leipzig.de).
 
+![](static/screencast-0.4.8-progress.gif)
+
 ## Installation
 
 Installation via Go tools.
