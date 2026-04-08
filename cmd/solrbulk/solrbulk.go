@@ -201,7 +201,7 @@ func main() {
 		defer func() {
 			elapsed := time.Since(start).Truncate(time.Second)
 			rate := float64(i) / time.Since(start).Seconds()
-			fmt.Fprintf(os.Stderr, "\r\033[2K\033[2;37m  processed %d docs in %v (%0.0f docs/s)\033[0m\n", i, elapsed, rate)
+			fmt.Fprintf(os.Stderr, "\r\033[2K\033[2;37m█ processed %d docs in %v (%0.0f docs/s)\033[0m\n", i, elapsed, rate)
 		}()
 	}
 	for {
