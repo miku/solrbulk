@@ -39,8 +39,8 @@ cover:
 # nfpm-based packaging.
 .PHONY: deb
 deb: $(TARGETS) docs/solrbulk.1
-	SEMVER=$(SEMVER) GOARCH=amd64 nfpm package -p deb -f nfpm.yaml
+	SEMVER=$(SEMVER) GOARCH=amd64 go tool nfpm package -p deb -f nfpm.yaml
 
 .PHONY: rpm
 rpm: $(TARGETS) docs/solrbulk.1
-	SEMVER=$(SEMVER) GOARCH=amd64 nfpm package -p rpm -f nfpm.yaml
+	SEMVER=$(SEMVER) GOARCH=amd64 go tool nfpm package -p rpm -f nfpm.yaml
