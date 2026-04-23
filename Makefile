@@ -1,7 +1,9 @@
 SHELL := /bin/bash
 TARGETS = solrbulk
 PKGNAME = solrbulk
-VERSION = 0.4.8
+VERSION = 0.4.9
+
+SEMVER := $(shell echo $(VERSION) | sed 's/^v//')
 
 solrbulk: cmd/solrbulk/solrbulk.go
 	go build -o $@ $^
@@ -26,32 +28,19 @@ clean:
 	go clean
 	rm -f coverage.out
 	rm -f $(TARGETS)
-	rm -f solrbulk-*.x86_64.rpm
-	rm -f solrbulk*.deb
-	rm -rf debian/solrbulk/usr
+	rm -f $(PKGNAME)_*.deb
+	rm -f $(PKGNAME)-*.rpm
 
 .PHONY: cover
 cover:
 	go get -d && go test -v	-coverprofile=coverage.out
 	go tool cover -html=coverage.out
 
-
+# nfpm-based packaging.
 .PHONY: deb
-deb: $(TARGETS)
-	mkdir -p debian/$(PKGNAME)/usr/local/bin
-	cp $(TARGETS) debian/$(PKGNAME)/usr/local/bin
-	mkdir -p debian/$(PKGNAME)/usr/local/share/man/man1
-	cp docs/$(PKGNAME).1 debian/$(PKGNAME)/usr/local/share/man/man1
-	cd debian && fakeroot dpkg-deb -Zzstd --build $(PKGNAME) .
-	mv debian/$(PKGNAME)_*.deb .
+deb: $(TARGETS) docs/solrbulk.1
+	SEMVER=$(SEMVER) GOARCH=amd64 nfpm package -p deb -f nfpm.yaml
 
 .PHONY: rpm
-rpm: $(TARGETS)
-	mkdir -p $(HOME)/rpmbuild/{BUILD,SOURCES,SPECS,RPMS}
-	mkdir -p $(HOME)/rpmbuild/SOURCES/$(PKGNAME)
-	cp ./packaging/$(PKGNAME).spec $(HOME)/rpmbuild/SPECS
-	cp $(TARGETS) $(HOME)/rpmbuild/SOURCES/$(PKGNAME)
-	cp docs/$(PKGNAME).1 $(HOME)/rpmbuild/SOURCES/$(PKGNAME)
-	./packaging/buildrpm.sh $(PKGNAME)
-	cp $(HOME)/rpmbuild/RPMS/x86_64/$(PKGNAME)-$(VERSION)*.rpm .
-
+rpm: $(TARGETS) docs/solrbulk.1
+	SEMVER=$(SEMVER) GOARCH=amd64 nfpm package -p rpm -f nfpm.yaml

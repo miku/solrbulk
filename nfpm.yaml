@@ -1,0 +1,36 @@
+name: solrbulk
+arch: ${GOARCH}
+platform: linux
+version: ${SEMVER}
+version_schema: semver
+epoch: 0
+release: 0
+section: utils
+priority: optional
+maintainer: Martin Czygan <martin.czygan@uni-leipzig.de>
+description: A command line tool to batch submit documents to Apache Solr.
+vendor: Leipzig University Library
+homepage: https://github.com/ubleipzig/solrbulk
+license: MIT
+disable_globbing: false
+
+contents:
+  # Binary
+  - src: solrbulk
+    dst: /usr/local/bin/solrbulk
+    file_info:
+      mode: 0755
+
+  # Man page
+  - src: docs/solrbulk.1
+    dst: /usr/local/share/man/man1/solrbulk.1
+    file_info:
+      mode: 0644
+
+umask: 0o002
+
+deb:
+  compression: zstd
+
+rpm:
+  compression: zstd
