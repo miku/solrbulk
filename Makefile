@@ -5,12 +5,9 @@ VERSION = 0.4.9
 
 SEMVER := $(shell echo $(VERSION) | sed 's/^v//')
 
-solrbulk: cmd/solrbulk/solrbulk.go
-	go build -o $@ $^
-
 .PHONY: all
 all: imports test
-	go build
+	$(MAKE) $(TARGETS)
 
 .PHONY: test
 test:
@@ -36,11 +33,14 @@ cover:
 	go get -d && go test -v	-coverprofile=coverage.out
 	go tool cover -html=coverage.out
 
+solrbulk: cmd/solrbulk/solrbulk.go
+	go build -ldflags "-s -w -X github.com/miku/solrbulk.Version=$(VERSION)" -o $@ $<
+
 # nfpm-based packaging.
 .PHONY: deb
 deb: $(TARGETS) docs/solrbulk.1
-	SEMVER=$(SEMVER) GOARCH=amd64 go tool nfpm package -p deb -f nfpm.yaml
+	SEMVER=$(SEMVER) GOARCH=amd64 nfpm package -p deb -f nfpm.yaml
 
 .PHONY: rpm
 rpm: $(TARGETS) docs/solrbulk.1
-	SEMVER=$(SEMVER) GOARCH=amd64 go tool nfpm package -p rpm -f nfpm.yaml
+	SEMVER=$(SEMVER) GOARCH=amd64 nfpm package -p rpm -f nfpm.yaml
