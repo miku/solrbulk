@@ -10,10 +10,9 @@ solrbulk: cmd/solrbulk/solrbulk.go
 all: imports test
 	go build
 
-# http://docs.travis-ci.com/user/languages/go/#Default-Test-Script
 .PHONY: test
 test:
-	go get -d && go test -v
+	go test -v ./...
 
 .PHONY: imports
 imports:
