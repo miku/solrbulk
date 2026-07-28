@@ -16,7 +16,7 @@ disable_globbing: false
 
 contents:
   # Binary
-  - src: solrbulk
+  - src: build/solrbulk
     dst: /usr/local/bin/solrbulk
     file_info:
       mode: 0755
