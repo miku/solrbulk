@@ -4,7 +4,7 @@ platform: linux
 version: ${SEMVER}
 version_schema: semver
 epoch: 0
-release: 0
+release: 1
 section: utils
 priority: optional
 maintainer: Martin Czygan <martin.czygan@uni-leipzig.de>
