@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 TARGETS = solrbulk
 PKGNAME = solrbulk
-VERSION = 0.4.11
+VERSION = 0.4.12
 
 SEMVER := $(shell echo $(VERSION) | sed 's/^v//')
 

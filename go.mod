@@ -3,9 +3,9 @@ module github.com/miku/solrbulk
 go 1.25.0
 
 require (
-	github.com/klauspost/compress v1.19.1
+	github.com/klauspost/compress v1.19.2
 	github.com/sethgrid/pester v1.2.0
-	github.com/sirupsen/logrus v1.9.4
+	github.com/sirupsen/logrus v1.10.0
 )
 
 require (
